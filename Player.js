@@ -1,13 +1,44 @@
-function Player(left, right, up, down, sprite, game, speed){
-	this.left = left;
-	this.right = right;
-	this.up = up;
-	this.down = down;
+function Player(sprite, game, speed){
 	this.speed = speed;
 	this.sprite = game.add.sprite(100, 100, sprite)
 	game.physics.arcade.enable(this.sprite);
+}
+
+function PlayerWithKeys(left, right, up, down, primary, special, sprite, game, speed){
+	var player = new Player(sprite, game, speed);
+	player.left = left;
+	player.right = right;
+	player.up = up;
+	player.down = down;
+	player.primary = primary;
+	player.special = special;
+	this.speed = speed;
+	this.sprite = game.add.sprite(100, 100, sprite)
+	game.physics.arcade.enable(this.sprite);
+	return player;
+}
+
+Player.prototype.registerPlayerAs = function(playerNumber){
+	if(playerNumber == 1){
+	this.left = "J".charCodeAt(0);
+	this.right = "L".charCodeAt(0);
+	this.up = "I".charCodeAt(0);
+	this.down = "K".charCodeAt(0);
+	this.primary = "N".charCodeAt(0);
+	this.special = "M".charCodeAt(0);
+	}
+	else{
+	this.left = "S".charCodeAt(0);
+	this.right = "F".charCodeAt(0);
+	this.up = "E".charCodeAt(0);
+	this.down = "D".charCodeAt(0);
+	this.primary = "A".charCodeAt(0);
+	this.special = "Q".charCodeAt(0);
+	
+	}
 	
 }
+
 
 Player.prototype.update = function(game){
 
