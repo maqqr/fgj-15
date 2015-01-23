@@ -105,17 +105,17 @@ Player.prototype.shootMiddle = function(game, balls){
 		return;
 	}
 	this.isLoading = false;
-	var xPos = (this.playerNumber == 1 ? 50 : -50); 
-	var projectile = game.add.sprite(this.sprite.body.x + xPos, this.sprite.body.y, this.playerNumber == 1 ? 'ball' : 'ballBlue');
+	var xPos = (this.playerNumber == 2 ? 50 : -50); 
+	var projectile = game.add.sprite(this.sprite.body.x + xPos, this.sprite.body.y, this.playerNumber == 2 ? 'ball' : 'ballBlue');
 	game.physics.arcade.enable(projectile);
 	var velocityX = 250.0;
 	velocityX *= 0.1 * this.loaded;
 	if(this.playerNumber == 1)
 	{
-		
+		velocityX *= -1.0;
 	}
 	else{
-		velocityX *= -1.0;
+
 	}
 	var velocityY = 0.0;
 	if(game.input.keyboard.isDown(this.up))
