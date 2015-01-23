@@ -266,3 +266,8 @@ setEmitterPos = ffi "wrSetEmitterPos(%*)"
 emitterBurst :: Emitter -> Double -> Int -> Fay ()
 emitterBurst = ffi "%1.start(true, %2, null, %3)"
 
+setParticleMaxSpeed :: Emitter -> (Double, Double) -> Fay ()
+setParticleMaxSpeed = ffi "wrSetParticleMaxSpeed(%*)"
+
+setParticleMinSpeed :: Emitter -> (Double, Double) -> Fay ()
+setParticleMinSpeed = ffi "wrSetParticleMinSpeed(%*)"

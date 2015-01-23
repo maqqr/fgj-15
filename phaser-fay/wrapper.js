@@ -121,3 +121,13 @@ function wrGetGamePadInput(game, padIndex) {
            , up:    getButton(pad, 17) || game.input.keyboard.isDown(kup)
            };
 }
+
+// :: Emitter -> (Double, Double) -> Fay ()
+function wrSetParticleMaxSpeed(emitter, speed) {
+    emitter.maxParticleSpeed = new Phaser.Point(speed[0], speed[1]);
+}
+
+// :: Emitter -> (Double, Double) -> Fay ()
+function wrSetParticleMinSpeed(emitter, speed) {
+    emitter.minParticleSpeed = new Phaser.Point(speed[0], speed[1]);
+}

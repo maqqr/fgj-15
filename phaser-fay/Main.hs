@@ -78,19 +78,27 @@ createGame game = do
     enableBody stars True
     repeatTimer game (3 * seconds) 10 $ createStar game stars
 
-    txt <- newText game "testfont" 64 (200, 100) "Collect\n     5\n stars!"
+    txt <- newText game "testfont" 64 (260, 100) "Collect\n     3\n stars!"
     singleShot game (3 * seconds) $ destroy txt
 
-    redEmitter <- newEmitter game (0, 0) 50 ["redpart"]
-    blueEmitter <- newEmitter game (0, 0) 50 ["bluepart"]
+    redEmitter <- createEffect "redpart"
+    blueEmitter <- createEffect "bluepart"
 
     return $ GameState physics player1' player2' platforms stars 0 0 (blueEmitter, redEmitter)
     where
+        createEffect :: String -> Fay Emitter
+        createEffect particleTexName = do
+            emitter <- newEmitter game (0, 0) 50 [particleTexName]
+            setParticleMaxSpeed emitter (-400, -400)
+            setParticleMinSpeed emitter (800, 800)
+            return emitter
+
         createStar :: Game -> Group -> Fay ()
         createStar game stars = do
-            rBounce <- fmap (* 0.2) random
-            rx   <- fmap (\i -> 80 + i * (800 - 80 * 2)) random
+            rBounce <- fmap (* 0.2) random -- Random bounciness.
+            rx      <- fmap (\i -> 80 + i * (800 - 80 * 2)) random -- Random x position.
             star <- create stars "star" (rx, 0)
+            star ~> (anchor >>> setTo (0.5, 0.5))
             star ~> (scale >>> setTo (3, 3))
             star ~> (body >>> gravity >>> setY 80)
             star ~> (body >>> bounce >>> setY (0.7 + rBounce))
@@ -122,12 +130,12 @@ updateGame game state = do
     overlap physics player2 stars $ starCollisionHandler addScore2 snd
 
     -- Update both players.
-    forM_ (enumerate [player1, player2]) $ \(i, pl) -> do
-        pInput <- getGamePadInput game i
-        updatePlayer pInput pl
+    forM_ (enumerate [player1, player2]) $ \(i, player) -> do
+        input <- getGamePadInput game i
+        updatePlayer input player
         -- Jumping.
-        when (padUp pInput && (pl ~> (body >>> touchingDown))) $
-            pl ~> (body >>> velocity >>> setY (-350))
+        when (padUp input && (player ~> (body >>> touchingDown))) $
+            player ~> (body >>> velocity >>> setY (-350))
 
     where
         enumerate :: [a] -> [(Int, a)]
@@ -140,10 +148,9 @@ updateGame game state = do
 
         createParticleBurst :: ((Emitter, Emitter) -> Emitter) -> (Double, Double) -> Fay ()
         createParticleBurst getter pos = do
-            gamestate <- get state
-            let emitter = getter $ emitters gamestate
+            emitter <- fmap (getter . emitters) (get state)
             setEmitterPos emitter pos
-            emitterBurst emitter 500 5
+            emitterBurst emitter 2000 25
 
         updatePlayer :: GamePadInput -> Sprite -> Fay ()
         updatePlayer pad player'
