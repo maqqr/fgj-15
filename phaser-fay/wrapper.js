@@ -73,18 +73,39 @@ function wrNewText(game, name, fntSize, pos, text) {
     return game.add.bitmapText(pos[0], pos[1], name, text, fntSize);
 }
 
-function getButton(rawpad, index) {
-    if (rawpad === null || rawpad === undefined) {
-        return false;
+function getButton(pad, index) {
+    if (!(pad === null || pad === undefined)) {
+        var rpad = pad._rawPad;
+        if (!(rpad === null || rpad === undefined)) {
+            return rpad.buttons[index] == 1;
+        }
     }
-    else {
-        return rawpad.buttons[index] == 1;
-    }
+    return false;
 }
 
-// :: GamePad -> Fay GamePadInput
-function wrGetGamePadInput(pad) {
-    return { a: getButton(pad._rawPad, 1)
-           , b: getButton(pad._rawPad, 0)
+// :: Game -> Int -> Fay GamePadInput
+function wrGetGamePadInput(game, padIndex) {
+    var pad = [game.input.gamepad.pad1, game.input.gamepad.pad2][padIndex];
+    var ka = Phaser.Keyboard.O;
+    var kb = Phaser.Keyboard.L;
+    var kleft = Phaser.Keyboard.LEFT;
+    var kright = Phaser.Keyboard.RIGHT;
+    var kdown = Phaser.Keyboard.DOWN;
+    var kup = Phaser.Keyboard.UP;
+    if (padIndex == 2) {
+        ka = Phaser.Keyboard.Q;
+        kb = Phaser.Keyboard.A;
+        kleft = Phaser.Keyboard.A;
+        kright = Phaser.Keyboard.D;
+        kdown = Phaser.Keyboard.S;
+        kup = Phaser.Keyboard.W;
+    }
+
+    return { a:     getButton(pad, 1)  || game.input.keyboard.isDown(ka)
+           , b:     getButton(pad, 0)  || game.input.keyboard.isDown(kb)
+           , left:  getButton(pad, 14) || game.input.keyboard.isDown(kleft)
+           , right: getButton(pad, 15) || game.input.keyboard.isDown(kright)
+           , down:  getButton(pad, 16) || game.input.keyboard.isDown(kdown)
+           , up:    getButton(pad, 17) || game.input.keyboard.isDown(kup)
            };
 }

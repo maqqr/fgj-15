@@ -19,6 +19,8 @@ random = ffi "Math.random()"
 newGame :: Int -> Int -> Fay Game
 newGame = ffi "wrNewGame(%*)"
 
+setSmoothing :: Game -> Bool -> Fay ()
+setSmoothing = ffi "%1.stage.smoothed=%2"
 
 -- Asset loading
 
@@ -74,6 +76,9 @@ newSprite = ffi "wrNewSprite(%*)"
 
 anchor :: Sprite -> Vector
 anchor = ffi "%1.anchor"
+
+position :: Sprite -> Vector
+position = ffi "%1.position"
 
 addAnimation :: Sprite -> String -> [Int] -> Int -> Bool -> Fay ()
 addAnimation = ffi "%1.animations.add(%2, %3, %4, %5)"
@@ -231,7 +236,7 @@ down = ffi "%1.down"
 isDown :: Key -> Bool
 isDown = ffi "%1.isDown"
 
-getGamePadInput :: GamePad -> Fay GamePadInput
+getGamePadInput :: Game -> Int -> Fay GamePadInput
 getGamePadInput = ffi "wrGetGamePadInput(%*)"
 
 padUp :: GamePadInput -> Bool
