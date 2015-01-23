@@ -1,8 +1,13 @@
 function Player(sprite, game, speed){
 	this.speed = speed;
+	this.score = 0;
+	this.isActive = false;
 	this.sprite = game.add.sprite(100, 100, sprite)
 	game.physics.arcade.enable(this.sprite);
 }
+
+
+
 
 function PlayerWithKeys(left, right, up, down, primary, special, sprite, game, speed){
 	var player = new Player(sprite, game, speed);
@@ -16,6 +21,10 @@ function PlayerWithKeys(left, right, up, down, primary, special, sprite, game, s
 	this.sprite = game.add.sprite(100, 100, sprite)
 	game.physics.arcade.enable(this.sprite);
 	return player;
+}
+
+Player.prototype.setActivity = function(activity){
+	this.isActive = activity;
 }
 
 Player.prototype.registerPlayerAs = function(playerNumber){
@@ -41,7 +50,7 @@ Player.prototype.registerPlayerAs = function(playerNumber){
 
 
 Player.prototype.update = function(game){
-
+	if(!this.isActive) return;
 	if(game.input.keyboard.isDown(this.left))
 	{
 		move(-this.speed, 0, this.sprite);
