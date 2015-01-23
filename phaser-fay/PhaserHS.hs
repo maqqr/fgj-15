@@ -195,6 +195,9 @@ setX = ffi "%2.x=%1"
 setY :: Double -> Vector -> Fay ()
 setY = ffi "%2.y=%1"
 
+vectorToTuple :: Vector -> (Double, Double)
+vectorToTuple = ffi "[%1.x, %1.y]"
+
 setTo :: (Double, Double) -> Vector -> Fay ()
 setTo = ffi "wrSetTo(%*)"
 

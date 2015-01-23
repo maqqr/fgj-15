@@ -98,15 +98,12 @@ createGame game = do
 
 -- | Adds score to player 1.
 addScore1 :: State GameState -> Int -> Fay ()
-addScore1 state x = do
-    modify state $ \g -> g { score1 = score1 g + x }
-    putStrLn "Player 1 got point"
+addScore1 state x = modify state $ \g -> g { score1 = score1 g + x }
 
 
 -- | Adds score to player 2.
 addScore2 :: State GameState -> Int -> Fay ()
-addScore2 state x = do
-    modify state $ \g -> g { score2 = score2 g + x }
+addScore2 state x = modify state $ \g -> g { score2 = score2 g + x }
 
 
 -- | Updates game state.
@@ -121,11 +118,11 @@ updateGame game state = do
     collider stars platforms
 
     -- Star collection.
-    overlap physics player1 stars $ \_ star -> kill star >> addScore1 state 1 >> redBurst
-    overlap physics player2 stars $ \_ star -> kill star >> addScore2 state 1
+    overlap physics player1 stars $ starCollisionHandler addScore1 fst
+    overlap physics player2 stars $ starCollisionHandler addScore2 snd
 
     -- Update both players.
-    forM_ (zip [player1, player2] [1..]) $ \(pl, i) -> do
+    forM_ (enumerate [player1, player2]) $ \(i, pl) -> do
         pInput <- getGamePadInput game i
         updatePlayer pInput pl
         -- Jumping.
@@ -133,10 +130,20 @@ updateGame game state = do
             pl ~> (body >>> velocity >>> setY (-350))
 
     where
-        redBurst = do
+        enumerate :: [a] -> [(Int, a)]
+        enumerate = zip [1..]
+
+        starCollisionHandler addScore getter _ star = do
+            addScore state 1
+            createParticleBurst getter (vectorToTuple $ position star)
+            kill star
+
+        createParticleBurst :: ((Emitter, Emitter) -> Emitter) -> (Double, Double) -> Fay ()
+        createParticleBurst getter pos = do
             gamestate <- get state
-            let em = fst $ emitters gamestate
-            emitterBurst em 500 5
+            let emitter = getter $ emitters gamestate
+            setEmitterPos emitter pos
+            emitterBurst emitter 500 5
 
         updatePlayer :: GamePadInput -> Sprite -> Fay ()
         updatePlayer pad player'
