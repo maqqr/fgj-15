@@ -108,7 +108,7 @@ Player.prototype.shootMiddle = function(game, balls){
 	var xPos = (this.playerNumber == 1 ? 50 : -50); 
 	var projectile = game.add.sprite(this.sprite.body.x + xPos, this.sprite.body.y, this.playerNumber == 1 ? 'ball' : 'ballBlue');
 	game.physics.arcade.enable(projectile);
-	var velocityX = 100.0;
+	var velocityX = 250.0;
 	velocityX *= 0.1 * this.loaded;
 	if(this.playerNumber == 1)
 	{
@@ -119,9 +119,9 @@ Player.prototype.shootMiddle = function(game, balls){
 	}
 	var velocityY = 0.0;
 	if(game.input.keyboard.isDown(this.up))
-		velocityY = -this.loaded;
+		velocityY = -this.loaded*2;
 	else if(game.input.keyboard.isDown(this.down))
-		velocityY = this.loaded ;
+		velocityY = this.loaded *2;
 	projectile.body.velocity.x = velocityX;
 	balls[balls.length] = projectile;
 	this.loaded = 0;

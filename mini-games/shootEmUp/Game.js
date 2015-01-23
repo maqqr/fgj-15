@@ -4,9 +4,9 @@ var lvlWidth = 800;
 var lvlHeight = 600;
 var game = new Phaser.Game(lvlWidth, lvlHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 var cursors;
-var speed = 300;
+var speed = 200;
 //var maxScore = 5;
-var maxTime = 20;
+var maxTime = 30;
 var startTime = 1;
 var startingText = "Shoot your opponent!";
 var startingTextComponent;
@@ -17,6 +17,7 @@ var spikes;
 var player1StartX = 75;
 var player2StartX = 725;
 var balls = [];
+var destroyed = false;
 
 function preload()
 {
@@ -88,11 +89,17 @@ function update(){
 		{
 			jimmu.sprite.destroy();
 			jammu.score++;
+			game.time.events.add(Phaser.Timer.SECOND * 1, function(){
+			destroy();
+			}, this);
 		}, null, null);
 		game.physics.arcade.collide(jammu.sprite, balls[i], function()
 		{
 			jammu.sprite.destroy();
 			jimmu.score++;
+			game.time.events.add(Phaser.Timer.SECOND * 1, function(){
+			destroy();
+			}, this);
 		}, null, null);
 		
 	}
@@ -107,7 +114,14 @@ function update(){
 
 
 function destroy(){
+	if(destroyed) return;
+	destroyed = true;
 	game.add.text(lvlWidth *0.5 -50, lvlHeight * 0.5 -10, 'Game Over!', { fontSize: '22px', fill: '#fff' });
+	
+	balls.forEach(function(element, index, array){
+		element.body.velocity.x = 0;
+		element.body.velocity.y = 0;
+	});
 	
 	jimmu.setActivity(false);
 	jammu.setActivity(false);
