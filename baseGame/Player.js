@@ -1,3 +1,6 @@
+var lvlWidth = 800;
+var lvlHeight = 600;
+
 function Player(sprite, game, speed){
 	this.speed = speed;
 	this.score = 0;
@@ -25,6 +28,8 @@ function PlayerWithKeys(left, right, up, down, primary, special, sprite, game, s
 
 Player.prototype.setActivity = function(activity){
 	this.isActive = activity;
+	this.sprite.body.velocity.x = 0;
+	this.sprite.body.velocity.y = 0;
 }
 
 Player.prototype.registerPlayerAs = function(playerNumber){
@@ -87,7 +92,7 @@ function moveWithinField(xToMove, yToMove, characterObject){
 }
 
 function move(xToMove, yToMove, characterObject){
-	characterObject.body.x += xToMove;
-	characterObject.body.y += yToMove;
+	characterObject.body.velocity.x = xToMove;
+	characterObject.body.velocity.y = yToMove;
 }
 
