@@ -1,14 +1,21 @@
+
 var lvlWidth = 800;
 var lvlHeight = 600;
 
-function Player(sprite, game, speed){
+function Player(sprite, game, speed, x, y){
 	this.speed = speed;
 	this.score = 0;
 	this.isActive = false;
-	this.sprite = game.add.sprite(100, 100, sprite)
+	this.sprite = game.add.sprite(x, y, sprite)
 	game.physics.arcade.enable(this.sprite);
 }
 
+
+
+Player.prototype.move = function(x, y){
+	this.sprite.body.x += x;
+	this.sprite.body.y += y;
+}
 
 
 
@@ -58,19 +65,19 @@ Player.prototype.update = function(game){
 	if(!this.isActive) return;
 	if(game.input.keyboard.isDown(this.left))
 	{
-		move(-this.speed, 0, this.sprite);
+		moveWithinField(-this.speed, 0, this.sprite);
 	}
 	else if(game.input.keyboard.isDown(this.right))
 	{
-		move(this.speed, 0, this.sprite);
+		moveWithinField(this.speed, 0, this.sprite);
 	}
 	else if(game.input.keyboard.isDown(this.down))
 	{
-		move(0, this.speed, this.sprite);
+		moveWithinField(0, this.speed, this.sprite);
 	}
 	else if(game.input.keyboard.isDown(this.up))
 	{
-		move(0, -this.speed, this.sprite);
+		moveWithinField(0, -this.speed, this.sprite);
 	}
 	else
 	{
