@@ -1,0 +1,33 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 23.1.2015, 20:40:13
+    Author     : thinkpad
+*/
+body {
+  background-color: black;
+  color: white; }
+
+#main_canvas {
+  color: white;
+  border: 1px solid white;
+  margin: 0;
+  padding: 0;
+  margin-left: auto;
+  margin-right: auto; }
+
+#game_canvas {
+  border: 1px solid white;
+  position: relative;
+  top: -20px;
+  margin: 0;
+  padding: 0;
+  margin-left: auto;
+  margin-right: auto;
+  height: 600px;
+  width: 800px; }
+
+/*# sourceMappingURL=style.css.map */
