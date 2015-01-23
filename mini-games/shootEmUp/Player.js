@@ -1,6 +1,7 @@
 
 var lvlWidth = 800;
 var lvlHeight = 600;
+var coolDownForShooting = 0.5;
 
 function Player(sprite, game, speed, x, y, playerNumber){
 	this.speed = speed;
@@ -8,6 +9,7 @@ function Player(sprite, game, speed, x, y, playerNumber){
 	this.playerNumber = playerNumber;
 	this.isActive = false;
 	this.isLoading = false;
+	this.lastShot = 0;
 	this.loaded = 0;
 	this.sprite = game.add.sprite(x, y, sprite)
 	game.physics.arcade.enable(this.sprite);
@@ -98,7 +100,7 @@ Player.prototype.update = function(game, balls){
 }
 
 Player.prototype.shootMiddle = function(game, balls){
-	if(this.loaded < 5){
+	if(this.loaded < 5 || game.time.totalElapsedSeconds() <= this.lastShot + coolDownForShooting ){
 		this.loaded = 0;
 		return;
 	}
@@ -106,19 +108,40 @@ Player.prototype.shootMiddle = function(game, balls){
 	var xPos = (this.playerNumber == 1 ? 50 : -50); 
 	var projectile = game.add.sprite(this.sprite.body.x + xPos, this.sprite.body.y, this.playerNumber == 1 ? 'ball' : 'ballBlue');
 	game.physics.arcade.enable(projectile);
-	var velocity = 100.0;
-	velocity *= 0.05 * this.loaded;
+	var velocityX = 100.0;
+	velocityX *= 0.1 * this.loaded;
 	if(this.playerNumber == 1)
 	{
 		
 	}
 	else{
-		velocity *= -1.0;
+		velocityX *= -1.0;
 	}
-	projectile.body.immovable = false;
-	projectile.body.velocity.x = velocity;
+	var velocityY = 0.0;
+	if(game.input.keyboard.isDown(this.up))
+		velocityY = -this.loaded;
+	else if(game.input.keyboard.isDown(this.down))
+		velocityY = this.loaded ;
+	projectile.body.velocity.x = velocityX;
 	balls[balls.length] = projectile;
-	this.loaded  = 0;
+	this.loaded = 0;
+	this.lastShot = game.time.totalElapsedSeconds();
+	if(velocityY != 0){
+
+		game.time.events.add(Phaser.Timer.SECOND * 0.1, function(){
+			projectile.body.velocity.y += velocityY;
+		}, this);
+		game.time.events.add(Phaser.Timer.SECOND * 0.2, function(){
+			projectile.body.velocity.y += velocityY;
+		}, this);
+		game.time.events.add(Phaser.Timer.SECOND * 0.3, function(){
+			projectile.body.velocity.y += velocityY*2;
+		}, this);
+		game.time.events.add(Phaser.Timer.SECOND * 0.5, function(){
+			projectile.body.velocity.x *= 0.75;
+			projectile.body.velocity.y += velocityY*2;
+		}, this);
+	}
 }
 
 

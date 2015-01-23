@@ -79,7 +79,7 @@ function update(){
 	game.physics.arcade.collide(jimmu.sprite, jammu.sprite);
 	for	(var i = 0; i < balls.length; i++){
 		for(var j = 0; j < spikes.length; j++){
-			game.physics.arcade.collide(spikes[j], balls[i],function(){
+			game.physics.arcade.overlap(spikes[j], balls[i],function(){
 				spikes[j].destroy();
 				balls[i].destroy();
 			}, null, null)
