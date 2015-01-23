@@ -1,3 +1,4 @@
+{-# LANGUAGE RecordWildCards #-}
 module Main where
 
 import Prelude
@@ -111,25 +112,20 @@ addScore2 state x = do
 -- | Updates game state.
 updateGame :: Game -> State GameState -> Fay ()
 updateGame game state = do
-    gamestate <- get state
-    let player1'   = player1 gamestate
-        player2'   = player2 gamestate
-        platforms' = platforms gamestate
-        stars'     = stars gamestate
-        physics'   = physics gamestate
-        collider   = collide physics'
+    GameState{..} <- get state
+    let collider   = collide physics
 
     -- Physics.
-    collider player1' platforms'
-    collider player2' platforms'
-    collider stars' platforms'
+    collider player1 platforms
+    collider player2 platforms
+    collider stars platforms
 
     -- Star collection.
-    overlap physics' player1' stars' $ \_ star -> kill star >> addScore1 state 1 >> redBurst
-    overlap physics' player2' stars' $ \_ star -> kill star >> addScore2 state 1
+    overlap physics player1 stars $ \_ star -> kill star >> addScore1 state 1 >> redBurst
+    overlap physics player2 stars $ \_ star -> kill star >> addScore2 state 1
 
     -- Update both players.
-    forM_ (zip [player1', player2'] [1..]) $ \(pl, i) -> do
+    forM_ (zip [player1, player2] [1..]) $ \(pl, i) -> do
         pInput <- getGamePadInput game i
         updatePlayer pInput pl
         -- Jumping.
