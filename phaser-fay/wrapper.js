@@ -37,7 +37,6 @@ function wrCreate(group, texName, pos) {
     return group.create(pos[0], pos[1], texName);
 }
 
-// func startPhys, return game.physics.arcade!
 // :: PhysicsType -> Physics
 function wrStartPhysics(game, physType) {
     game.physics.startSystem(physType);
@@ -81,6 +80,19 @@ function getButton(pad, index) {
         }
     }
     return false;
+}
+
+// :: Game -> (Double, Double) -> Int -> [String] -> Fay Emitter
+function wrNewEmitter(game, pos, maxPart, texNames) {
+    var em = game.add.emitter(pos[0], pos[1], maxPart);
+    em.makeParticles(texNames);
+    return em;
+}
+
+// :: Emitter -> (Double, Double) -> Fay ()
+function wrSetEmitterPos(emitter, pos) {
+    emitter.x = pos[0];
+    emitter.y = pos[1];
 }
 
 // :: Game -> Int -> Fay GamePadInput

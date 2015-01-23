@@ -92,14 +92,20 @@ stopAnimation = ffi "%1.animations.stop()"
 setFrame :: Sprite -> Int -> Fay ()
 setFrame = ffi "%1.frame=%2"
 
-kill :: Sprite -> Fay ()
+kill :: Ptr a -> Fay ()
 kill = ffi "%1.kill()"
 
-destroy :: Sprite -> Fay ()
+destroy :: Ptr a -> Fay ()
 destroy = ffi "%1.destroy()"
 
 scale :: Sprite -> Vector
 scale = ffi "%1.scale"
+
+setWidth :: Sprite -> Double -> Fay ()
+setWidth = ffi "%1.width=%2"
+
+setHeight :: Sprite -> Double -> Fay ()
+setHeight = ffi "%1.height=%2"
 
 
 -- Groups
@@ -230,3 +236,30 @@ padA = ffi "%1.a"
 
 padB :: GamePadInput -> Bool
 padB = ffi "%1.b"
+
+
+-- Time
+
+seconds :: Double
+seconds = ffi "Phaser.Timer.SECOND"
+
+singleShot :: Game -> Double -> Fay () -> Fay ()
+singleShot = ffi "%1.time.events.add(%2, %3, null)"
+
+repeatTimer :: Game -> Double -> Int -> Fay () -> Fay ()
+repeatTimer = ffi "%1.time.events.repeat(%2, %3, %4, null)"
+
+
+-- Particles
+
+data Emitter
+
+newEmitter :: Game -> (Double, Double) -> Int -> [String] -> Fay Emitter
+newEmitter = ffi "wrNewEmitter(%*)"
+
+setEmitterPos :: Emitter -> (Double, Double) -> Fay ()
+setEmitterPos = ffi "wrSetEmitterPos(%*)"
+
+emitterBurst :: Emitter -> Double -> Int -> Fay ()
+emitterBurst = ffi "%1.start(true, %2, null, %3)"
+

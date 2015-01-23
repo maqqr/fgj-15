@@ -17,6 +17,7 @@ data GameState = GameState
     , stars     :: Group
     , score1    :: Int
     , score2    :: Int
+    , emitters  :: (Emitter, Emitter)
     }
 
 
@@ -24,7 +25,11 @@ data GameState = GameState
 preloadGame :: Game -> Fay ()
 preloadGame game = do
     putStrLn "Preloading....."
-    mapM_ (uncurry $ loadImage game) [("ground", "platform.png"), ("star", "star.png")]
+    mapM_ (uncurry $ loadImage game)
+        [("ground", "platform.png")
+        ,("star", "star.png")
+        ,("bluepart", "bluepart.png")
+        ,("redpart", "redpart.png")]
     loadSpriteSheet game "dudeblue" "blueplayer.png" (20, 32)
     loadSpriteSheet game "dudered" "redplayer.png" (20, 32)
     loadBitmapFont game "testfont" "font.png" "font.fnt"
@@ -39,6 +44,7 @@ createPlayer game physics startPos texName = do
     player ~> (anchor >>> setTo (0.5, 0.5))
     player ~> (position >>> setTo startPos)
     player ~> (scale >>> setTo (3, 3))
+    player ~> (body >>> flip collideWorldBounds True)
 
     addAnimation player "walk" [0 .. 7] 10 True
     playAnimation player "walk"
@@ -58,27 +64,35 @@ createGame game = do
 
     -- Create ground floor.
     ground <- create platforms "ground" (0, (height . world $ game) - 64)
+    ground `setWidth` 800
+    ground `setHeight` 64
     setImmovable (body ground) True
 
     -- Create players.
     let cp = createPlayer game physics
-    player1' <- cp (50, 50) "dudeblue"
-    player2' <- cp (300, 50) "dudered"
+    player1' <- cp (740, 50) "dudeblue"
+    player2' <- cp (60, 50) "dudered"
 
-    -- TODO: Replace with timer that creates stars.
     stars <- newGroup game
     enableBody stars True
-    forM_ [0 .. 5] $ \i -> do
-        rBounce <- fmap (* 0.2) random
-        star <- create stars "star" (i * 80, 0)
-        star ~> (scale >>> setTo (3, 3))
-        star ~> (body >>> gravity >>> setY 6)
-        star ~> (body >>> bounce >>> setY (0.7 + rBounce))
+    repeatTimer game (3 * seconds) 10 $ createStar game stars
 
-    -- TODO: Remove this after some seconds.
-    txt <- newText game "testfont" 64 (200, 100) "Collect\nstars!"
+    txt <- newText game "testfont" 64 (200, 100) "Collect\n     5\n stars!"
+    singleShot game (3 * seconds) $ destroy txt
 
-    return $ GameState physics player1' player2' platforms stars 0 0
+    redEmitter <- newEmitter game (0, 0) 50 ["redpart"]
+    blueEmitter <- newEmitter game (0, 0) 50 ["bluepart"]
+
+    return $ GameState physics player1' player2' platforms stars 0 0 (blueEmitter, redEmitter)
+    where
+        createStar :: Game -> Group -> Fay ()
+        createStar game stars = do
+            rBounce <- fmap (* 0.2) random
+            rx   <- fmap (\i -> 80 + i * (800 - 80 * 2)) random
+            star <- create stars "star" (rx, 0)
+            star ~> (scale >>> setTo (3, 3))
+            star ~> (body >>> gravity >>> setY 80)
+            star ~> (body >>> bounce >>> setY (0.7 + rBounce))
 
 
 -- | Adds score to player 1.
@@ -111,7 +125,7 @@ updateGame game state = do
     collider stars' platforms'
 
     -- Star collection.
-    overlap physics' player1' stars' $ \_ star -> kill star >> addScore1 state 1
+    overlap physics' player1' stars' $ \_ star -> kill star >> addScore1 state 1 >> redBurst
     overlap physics' player2' stars' $ \_ star -> kill star >> addScore2 state 1
 
     -- Update both players.
@@ -123,6 +137,11 @@ updateGame game state = do
             pl ~> (body >>> velocity >>> setY (-350))
 
     where
+        redBurst = do
+            gamestate <- get state
+            let em = fst $ emitters gamestate
+            emitterBurst em 500 5
+
         updatePlayer :: GamePadInput -> Sprite -> Fay ()
         updatePlayer pad player'
             | pad ~> padRight = do
