@@ -198,8 +198,6 @@ collideWorldBounds = ffi "%1.collideWorldBounds=%2"
 
 -- Input
 
-data Key
-data CursorKeys
 data GamePad
 data GamePadInput
 
@@ -211,30 +209,6 @@ pad1 = ffi "%1.input.gamepad.pad1"
 
 pad2 :: Game -> GamePad
 pad2 = ffi "%1.input.gamepad.pad2"
-
-pad3 :: Game -> GamePad
-pad3 = ffi "%1.input.gamepad.pad3"
-
-pad4 :: Game -> GamePad
-pad4 = ffi "%1.input.gamepad.pad4"
-
-newCursorKeys :: Game -> Fay CursorKeys
-newCursorKeys = ffi "%1.input.keyboard.createCursorKeys()"
-
-left :: CursorKeys -> Key
-left = ffi "%1.left"
-
-right :: CursorKeys -> Key
-right = ffi "%1.right"
-
-up :: CursorKeys -> Key
-up = ffi "%1.up"
-
-down :: CursorKeys -> Key
-down = ffi "%1.down"
-
-isDown :: Key -> Bool
-isDown = ffi "%1.isDown"
 
 getGamePadInput :: Game -> Int -> Fay GamePadInput
 getGamePadInput = ffi "wrGetGamePadInput(%*)"

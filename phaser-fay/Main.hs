@@ -10,9 +10,7 @@ import Utils
 playerSpeed = 100
 
 data GameState = GameState
-    { cursor    :: CursorKeys
-    , test      :: Int
-    , physics   :: Physics
+    { physics   :: Physics
     , player1   :: Sprite
     , player2   :: Sprite
     , platforms :: Group
@@ -27,8 +25,8 @@ preloadGame :: Game -> Fay ()
 preloadGame game = do
     putStrLn "Preloading....."
     mapM_ (uncurry $ loadImage game) [("ground", "platform.png"), ("star", "star.png")]
-    loadSpriteSheet game "dudeleft" "leftplayer.png" (20, 32)
-    loadSpriteSheet game "duderight" "rightplayer.png" (20, 32)
+    loadSpriteSheet game "dudeblue" "blueplayer.png" (20, 32)
+    loadSpriteSheet game "dudered" "redplayer.png" (20, 32)
     loadBitmapFont game "testfont" "font.png" "font.fnt"
 
 
@@ -64,8 +62,8 @@ createGame game = do
 
     -- Create players.
     let cp = createPlayer game physics
-    player1' <- cp (50, 50) "dudeleft"
-    player2' <- cp (300, 50) "duderight"
+    player1' <- cp (50, 50) "dudeblue"
+    player2' <- cp (300, 50) "dudered"
 
     -- TODO: Replace with timer that creates stars.
     stars <- newGroup game
@@ -80,8 +78,7 @@ createGame game = do
     -- TODO: Remove this after some seconds.
     txt <- newText game "testfont" 64 (200, 100) "Collect\nstars!"
 
-    cursors <- newCursorKeys game
-    return $ GameState cursors 5 physics player1' player2' platforms stars 0 0
+    return $ GameState physics player1' player2' platforms stars 0 0
 
 
 -- | Adds score to player 1.
