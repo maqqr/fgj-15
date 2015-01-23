@@ -17,9 +17,9 @@ var spikes;
 
 function preload()
 {
-	game.load.image('jammu', './../assets/Player1.png');
-	game.load.image('jimmu', './../assets/Player2.png');
-	game.load.image('spikes', './../assets/Spikes.png');
+	game.load.image('jammu', './../../assets/Player1.png');
+	game.load.image('jimmu', './../../assets/Player2.png');
+	game.load.image('spikes', './../../assets/Spikes.png');
 }
 
 
