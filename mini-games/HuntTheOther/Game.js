@@ -45,16 +45,16 @@ function create(){
 	
 	var huntedPlayerNumber = game.rnd.integerInRange(1,2);
 	if(huntedPlayerNumber === 1){
-		jammu = createPlayer('jammu', 1, false, player1StartX, player1StartY);
+		jammu = createPlayer('jammu', 1, speed, false, player1StartX, player1StartY);
 		assignAsHunted(jammu);
 		huntedPlayer = jammu;
-		jimmu = createPlayer('target', 2, false, 400, 300);
+		jimmu = createPlayer('target', 2, speed *1.5, false, 400, 300);
 		jimmu.shoot = function(){ shootTarget(jimmu);};
 	}
 	else{
-		jimmu = createPlayer('jimmu', 2, false, player2StartX, player2StartY);
+		jimmu = createPlayer('jimmu', 2, speed, false,  player2StartX, player2StartY);
 		huntedPlayer = jimmu;
-		jammu = createPlayer('target', 1, false, 400, 300);
+		jammu = createPlayer('target', 1, speed*1.5, false, 400, 300);
 		jammu.shoot = function(){ shootTarget(jammu);};
 	}
 	
@@ -115,7 +115,7 @@ function start(){
 }
 
 
-function createPlayer(spriteName, playerKeyboardNumber, activity, x, y){
+function createPlayer(spriteName, playerKeyboardNumber, speed ,activity, x, y){
 	var player = new Player(spriteName , game, speed, x, y, playerKeyboardNumber);
 	player.setActivity(activity);
 	player.registerPlayerAs(playerKeyboardNumber);
