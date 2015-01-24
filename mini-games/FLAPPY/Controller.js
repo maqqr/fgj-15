@@ -6,7 +6,7 @@ function Bird(game, x, y) {
     this.active = false;
 }
 
-Bird.prototype.registerBirdAs = function(playerNumber){
+Bird.prototype.registerBirdAs = function(playerNumber, birdStartPower){
 	if(playerNumber == 1) {
 		this.leftButton = game.input.keyboard.addKey("J".charCodeAt(0));
 		this.rightButton = game.input.keyboard.addKey("L".charCodeAt(0));
@@ -30,6 +30,8 @@ Bird.prototype.registerBirdAs = function(playerNumber){
 	this.downButton.onDown.add(function () { this.buttonPressed(2); }, this);
 	this.bButton.onDown.add(function () { this.buttonPressed(6); }, this);
 	this.aButton.onDown.add(function () { this.buttonPressed(5); }, this);
+
+	this.power = birdStartPower;
   /*this.emitter = game.add.emitter(0, 0, 100);
     this.emitter.makeParticles('particle');
     this.emitter.gravity = 200;
@@ -44,12 +46,12 @@ Bird.prototype.update = function(game){
 
 Bird.prototype.buttonPressed = function(button)
 {
-    this.sheet.body.velocity.y = -400;
+    this.sheet.body.velocity.y = this.power;
 }
 
 Bird.prototype.addPhysics = function() {
 	if(!this.active) {
-    	game.physics.arcade.enableBody(this.sheet);
+    	var body = game.physics.arcade.enableBody(this.sheet);
     	this.active = true;
 	}
 }
