@@ -65,32 +65,48 @@ function createPlayer(spriteName, playerKeyboardNumber, activity, x, y){
 
 
 function update(){
-	if(game.time.totalElapsedSeconds() >= maxTime + startTime) destroy();
+	if(game.time.totalElapsedSeconds() >= maxTime + startTime) endGame();
 	game.physics.arcade.collide(jimmu.sprite, jammu.sprite);
 	for(var i = 0; i < spikes.length; i++)
 	{
 		game.physics.arcade.collide(jimmu.sprite, spikes[i], function(){
-			jimmu.score++;
+			jimmu.score--;
 			spikes[i].destroy();
 		}, null, null);
 		game.physics.arcade.collide(jammu.sprite, spikes[i], function(){
-			jammu.score++;
+			jammu.score--;
 			spikes[i].destroy();
 		}, null, null);
 	}
 
 
 	
-	player1Text.text = "P1 Hurt "+jammu.score+" times";
-	player2Text.text = "P2 Hurt "+jimmu.score+" times";
+	player1Text.text = "P1 Hurt "+ -jammu.score+" times";
+	player2Text.text = "P2 Hurt "+ -jimmu.score+" times";
 	jimmu.update(game);
 	jammu.update(game);
 }
 
 
-function destroy(){
+function endGame(){
 	game.add.text(lvlWidth *0.5 -50, lvlHeight * 0.5 -10, 'Game Over!', { fontSize: '22px', fill: '#fff' });
 	
 	jimmu.setActivity(false);
 	jammu.setActivity(false);
+	
+	if(jammu.score > jimmu.score)
+		result = 1;
+	else if(jammu.score < jimmu.score)
+		result = 2;
+	else
+		result = 0;
+		
+	destroy(result);
+}
+
+
+function destroy(gameResult){
+	parent.$(parent.document).trigger("onGameEnd",gameResult);
+	game.destroy();
+
 }

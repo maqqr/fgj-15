@@ -3,7 +3,6 @@ var jimmu;
 var lvlWidth = 800;
 var lvlHeight = 600;
 var game = new Phaser.Game(lvlWidth, lvlHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update });
-var cursors;
 var speed = 10;
 var maxScore = 5;
 var maxTime = 10;
@@ -13,7 +12,6 @@ function preload()
 {
 	game.load.image('jammu', 'Jammu.png');
 	game.load.image('jimmu', 'Jimmu.png');
-	cursors = game.input.keyboard.createCursorKeys();
 }
 
 

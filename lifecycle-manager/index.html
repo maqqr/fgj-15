@@ -20,10 +20,15 @@ and open the template in the editor.
     </head>
     <body>
         <h1> Tämä on meidän FGJ 2015 peli :Uber ADHD multiplayer management cycle  </h1>
+        <button id="startGameButton" type="button">Start Game</button>
         <div id="main_canvas">
             <p>Tähän tulee hubi ja pisteet</p>
+            <div >player 1: <span id="player1score">0</span></div>
+            <div >player 2: <span id="player2score">0</span></div>
+            <div id="game_canvas">
+                <iframe id="gameFrame" width="800" height="600" src=""></iframe>
+            </div>
             
-            <iframe id="game_canvas" src="http://www.w3schools.com"></iframe>
         </div>
     </body>
 </html>
