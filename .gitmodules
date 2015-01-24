@@ -1,0 +1,3 @@
+[submodule "cljs-src/cljs-testing"]
+	path = cljs-src/cljs-testing
+	url = git@github.com:jasalt/cljs-testing.git
