@@ -1,9 +1,9 @@
 /lifecycle-manager/GameLifecycleManagement/nbproject/private/
 Thumbs.db
 .DS_Store
-.blend1
-.blend2
-.blend3
+*.blend1
+*.blend2
+*.blend3
 /lifecycle-manager/FGJ2015/nbproject/private/
 /lifecycle-manager/FGJ2015/build/
 /nbproject/private/
