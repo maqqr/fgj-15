@@ -1,7 +1,7 @@
 
 var lvlWidth = 800;
 var lvlHeight = 600;
-var coolDownForShooting = 0.5;
+var coolDownForShooting = 0.2;
 
 function Player(sprite, game, speed, x, y, playerNumber){
 	this.speed = speed;
