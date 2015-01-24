@@ -4,7 +4,7 @@ var bird2;
 var topp;
 var bottom;
 var startTime = 1;
-var maxTime = 10;
+var maxTime = 20;
 var bottomStartY = 470;
 var bottomEndY = 320;
 var topStartY = 200;
@@ -27,12 +27,13 @@ function create() {
 	//this.insctructionText = game.add.text(250, 200, 'PRESS MORE BUTTONS!', { fontSize: '50', fill: '#000'});
     game.time.events.add(Phaser.Timer.SECOND * startTime, start, this);
     game.physics.arcade.gravity.y = 750;
-    createBird(375,200,1);
+    bird1 = createBird(460,300,1);
+    bird2 = createBird(300,300,2);
 }
 
 function update() {
 	if(game.time.totalElapsedSeconds() > startTime) {
-		bird1.addPhysics();
+		//bird1.addPhysics();
 	}
 	if(game.time.totalElapsedSeconds() >= maxTime + startTime) end();
 	if(game.time.totalElapsedSeconds() < (maxTime + startTime) && game.time.totalElapsedSeconds() > startTime)
@@ -43,9 +44,10 @@ function update() {
 }
 
 function createBird(x, y, playerNumber) {
-	bird1 = new Bird(game, x, y);
+
+	var bird = new Bird(game, x, y);
 	if (playerNumber != 0)
-		bird1.registerBirdAs(playerNumber);
+		bird.registerBirdAs(playerNumber);
 	return bird;
 }
 
@@ -54,6 +56,15 @@ function start() {
 
 function end() {
 	//game.add.text(800 *0.5 -85, 600 * 0.5 - 55, 'GAME OVER!', { fontSize: '22px', fill: '#f00' });
+	/*if (controller1.score > controller2.score) {
+		parent.$(parent.document).trigger("onGameEnd",1);
+	}
+	else if (controller1.score < controller2.score) {
+		parent.$(parent.document).trigger("onGameEnd",2);
+	}
+	else
+		parent.$(parent.document).trigger("onGameEnd",0);*/
+	game.destroy();
 }
 
 function moveFloors() {

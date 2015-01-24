@@ -61,5 +61,5 @@ function end() {
 	}
 	else
 		parent.$(parent.document).trigger("onGameEnd",0);
-	
+	game.destroy();
 }
