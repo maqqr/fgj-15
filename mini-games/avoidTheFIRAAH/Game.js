@@ -4,7 +4,7 @@ var lvlWidth = 800;
 var lvlHeight = 600;
 var game = new Phaser.Game(lvlWidth, lvlHeight, Phaser.WEBGL, '', { preload: preload, create: create, update: update });
 var cursors;
-var speed = 1000;
+var speed = 500;
 //var maxScore = 5;
 var maxTime = 30;
 var startTime = 1;
@@ -12,15 +12,16 @@ var startingText = "Stay on top of the platform!";
 var startingTextComponent;
 var player1Text;
 var player2Text;
-var ball;
+var map;
 
 function preload()
 {
-	game.load.tilemap('level1', 'assets/games/starstruck/level1.json', null, Phaser.Tilemap.TILED_JSON);
+	game.load.tilemap('level', 'level.json', null, Phaser.Tilemap.TILED_JSON);
 	game.load.image('jammu', './../../assets/Player1.png');
 	game.load.image('jimmu', './../../assets/Player2.png');
+	game.load.image('violetTiles', 'violetTiles.png');
 	//game.load.image('lava', './../../assets/Lava.png');
-	game.load.script('filter', 'https://cdn.rawgit.com/photonstorm/phaser/master/filters/Fire.js');
+	game.load.script('filter', 'Fire.js');
 }
 
 
@@ -28,6 +29,7 @@ function create(){
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	
 	createBackground();
+	createLevel();
 	
 	jammu = createPlayer('jammu', 1, false, 200, 100);
 	jimmu = createPlayer('jimmu', 2, false, 600, 100);	
@@ -44,6 +46,26 @@ function create(){
 	player2Text = game.add.text(lvlWidth *0.1 -50, 50, "P2 has collected "+jimmu.score+" balls!", { fontSize: '22px', fill: '#fff' });
 	startingTextComponent = game.add.text(lvlWidth *0.2-50, lvlHeight * 0.5 -10, startingText, { fontSize: '22px', fill: '#fff' });
 }
+
+function createLevel(){
+	map = game.add.tilemap('level');
+
+    map.addTilesetImage('violetTiles');
+
+    map.setCollisionByExclusion([ 13, 14, 15, 16, 46, 47, 48, 49, 50, 51 ]);
+
+    layer = map.createLayer('Tile Layer 1');
+
+    //  Un-comment this on to see the collision tiles
+    // layer.debug = true;
+
+  //  layer.resizeWorld();
+
+   // game.physics.arcade.gravity.y = 250;
+
+
+}
+
 
 function createBackground(){
 	background = game.add.sprite(0, 0);
