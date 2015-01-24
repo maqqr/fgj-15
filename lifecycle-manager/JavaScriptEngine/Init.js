@@ -8,15 +8,17 @@
 //                                                        |___/                                        |___/                                
 //
 //
-// ___        ___             _     
+//  qa___        ___             _     
 // | _ )_  _  / __| __ _ _ __ (_)_ _ 
 // | _ \ || | \__ \/ _` | '  \| | '_|
 // |___/\_, | |___/\__,_|_|_|_|_|_|  
 //      |__/                         
 
-
+var defaultGameNumber = 1;
 
 var games = [
+    "./../mini-games/FLAPPY/index.html",
+    "./../mini-games/HuntTheOther/index.html",
     "./../mini-games/PRESSMOREBUTTONS/index.html",
     "./../mini-games/islandFight/index.html",
     "./../mini-games/nappainsarja/index.html",
@@ -44,19 +46,18 @@ jQuery.fn.rotate = function(degrees) {
 $(document).ready(function(){
     
     $("#main_canvas").hide();
+    $(".player").hide();
     // center the game hub to the screen
 
     $('body,iframe').keypress(function (e) {
         if (e.which == '98') { // start on 'b'
             Init();
         }
-    });
-    
-    $('body,iframe').keypress(function (e) {
         if (e.which == '121') { // seuraava peli on 'y'
             Init();
         }
     });
+   
     
     $('#startGameButton').click(function () {
         Init();
@@ -68,8 +69,16 @@ function Init(){
     $("#player1score").text(life);
     $("#player2score").text(life);
     $("#main_canvas").show( 500 ,"swing", showGameHubAndStartGame);
+    playMainSong();
     $(document).bind('onGameEnd',startNextGame);
+    $(document).bind('onTimeUpdate',updateTime);
 }
+
+
+function updateTime(e, parameter) {
+    $("#timer").text(parameter);
+}
+
 
 function showGameHubAndStartGame(){
     startNextGame(null, 0);
@@ -100,11 +109,13 @@ function startNextGame(e, parameter) {
 
 function nextGameUrl() {
     previousGame = currentGame;
-    while(true) {
-        currentGame = randomInt(0,games.length-1);
-        if(currentGame !== previousGame )
+    while (true) {
+        currentGame = randomInt(0, games.length - 1);
+        if (currentGame !== previousGame)
             break;
     }
+    if(defaultGameNumber !== -1) // estää randomisoinnin
+        return games[defaultGameNumber];;
     return games[currentGame];
 }
 
@@ -122,7 +133,6 @@ function countScores(val){
     }
 
     checkGameEnd();
-
 }
 
 function checkGameEnd() {
