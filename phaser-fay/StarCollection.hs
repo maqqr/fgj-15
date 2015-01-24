@@ -1,5 +1,5 @@
 {-# LANGUAGE RecordWildCards #-}
-module Main where
+module StarCollection where
 
 import Prelude
 import Data.Function
@@ -10,15 +10,19 @@ import Utils
 
 playerSpeed = 100
 
+data Player = Player
+    { sprite    :: Sprite
+    , score     :: Int
+    , scoreText :: BitmapText
+    , emitter   :: Emitter
+    }
+
 data GameState = GameState
     { physics   :: Physics
-    , player1   :: Sprite
-    , player2   :: Sprite
+    , player1   :: Player
+    , player2   :: Player
     , platforms :: Group
     , stars     :: Group
-    , score1    :: Int
-    , score2    :: Int
-    , emitters  :: (Emitter, Emitter)
     }
 
 
@@ -37,19 +41,35 @@ preloadGame game = do
 
 
 -- | Creates player sprite.
-createPlayer :: Game -> Physics -> (Double, Double) -> String -> Fay Sprite
-createPlayer game physics startPos texName = do
-    player <- newSprite game texName (50, 50)
-    enable physics player
-    player ~> (body >>> gravity >>> setY 300)
-    player ~> (anchor >>> setTo (0.5, 0.5))
-    player ~> (position >>> setTo startPos)
-    player ~> (scale >>> setTo (3, 3))
-    player ~> (body >>> flip collideWorldBounds True)
+createPlayer :: Game
+             -> Physics
+             -> (Double, Double) -- ^ Player start position.
+             -> (Double, Double) -- ^ Player score text position.
+             -> String -- ^ Player texture name.
+             -> String -- ^ Star collection particle texture
+             -> Fay Player
+createPlayer game physics startPos textPos texName effectTexName = do
+    sprite <- newSprite game texName (50, 50)
+    enable physics sprite
+    sprite ~> (body >>> gravity >>> setY 300)
+    sprite ~> (anchor >>> setTo (0.5, 0.5))
+    sprite ~> (position >>> setTo startPos)
+    sprite ~> (scale >>> setTo (3, 3))
+    sprite ~> (body >>> flip collideWorldBounds True)
 
-    addAnimation player "walk" [0 .. 7] 10 True
-    playAnimation player "walk"
-    return player
+    addAnimation sprite "walk" [0 .. 7] 10 True
+    playAnimation sprite "walk"
+    Player `fmap` return sprite <*> return 0 <*> createScoreDisplay <*> createEffect effectTexName
+    where
+        createScoreDisplay :: Fay BitmapText
+        createScoreDisplay = newText game "testfont" 64 textPos "0"
+
+        createEffect :: String -> Fay Emitter
+        createEffect particleTexName = do
+            emitter <- newEmitter game (0, 0) 50 [particleTexName]
+            setParticleMaxSpeed emitter (-400, -400)
+            setParticleMinSpeed emitter (800, 800)
+            return emitter
 
 
 -- | Creates initial game state.
@@ -71,28 +91,18 @@ createGame game = do
 
     -- Create players.
     let cp = createPlayer game physics
-    player1' <- cp (740, 50) "dudeblue"
-    player2' <- cp (60, 50) "dudered"
+    player1' <- cp (740, 50) (710, 50) "dudeblue" "bluepart"
+    player2' <- cp (60, 50) (30, 50) "dudered" "redpart"
 
     stars <- newGroup game
     enableBody stars True
-    repeatTimer game (3 * seconds) 10 $ createStar game stars
+    repeatTimer game (2 * seconds) 5 $ createStar game stars
 
-    txt <- newText game "testfont" 64 (260, 100) "Collect\n     3\n stars!"
+    txt <- newText game "testfont" 64 (260, 100) "Collect\n stars!"
     singleShot game (3 * seconds) $ destroy txt
 
-    redEmitter <- createEffect "redpart"
-    blueEmitter <- createEffect "bluepart"
-
-    return $ GameState physics player1' player2' platforms stars 0 0 (blueEmitter, redEmitter)
+    return $ GameState physics player1' player2' platforms stars
     where
-        createEffect :: String -> Fay Emitter
-        createEffect particleTexName = do
-            emitter <- newEmitter game (0, 0) 50 [particleTexName]
-            setParticleMaxSpeed emitter (-400, -400)
-            setParticleMinSpeed emitter (800, 800)
-            return emitter
-
         createStar :: Game -> Group -> Fay ()
         createStar game stars = do
             rBounce <- fmap (* 0.2) random -- Random bounciness.
@@ -104,14 +114,26 @@ createGame game = do
             star ~> (body >>> bounce >>> setY (0.7 + rBounce))
 
 
+-- | Adds score to player.
+addScore :: Int -> Player -> Player
+addScore x p = p { score = score p + x }
+
 -- | Adds score to player 1.
 addScore1 :: State GameState -> Int -> Fay ()
-addScore1 state x = modify state $ \g -> g { score1 = score1 g + x }
+addScore1 state x = do
+    modify state $ \g -> g { player1 = addScore x $ player1 g }
+    currentState <- get state
+    let player = player1 currentState
+    setText (scoreText player) $ show (score player)
 
 
--- | Adds score to player 2.
+-- | Adds score to player 1.
 addScore2 :: State GameState -> Int -> Fay ()
-addScore2 state x = modify state $ \g -> g { score2 = score2 g + x }
+addScore2 state x = do
+    modify state $ \g -> g { player2 = addScore x $ player2 g }
+    currentState <- get state
+    let player = player2 currentState
+    setText (scoreText player) $ show (score player)
 
 
 -- | Updates game state.
@@ -121,34 +143,43 @@ updateGame game state = do
     let collider   = collide physics
 
     -- Physics.
-    collider player1 platforms
-    collider player2 platforms
+    collider (sprite player1) platforms
+    collider (sprite player2) platforms
     collider stars platforms
 
     -- Star collection.
-    overlap physics player1 stars $ starCollisionHandler addScore1 fst
-    overlap physics player2 stars $ starCollisionHandler addScore2 snd
+    overlap physics (sprite player1) stars $ starCollisionHandler addScore1 player1
+    overlap physics (sprite player2) stars $ starCollisionHandler addScore2 player2
 
     -- Update both players.
     forM_ (enumerate [player1, player2]) $ \(i, player) -> do
         input <- getGamePadInput game i
-        updatePlayer input player
+        updatePlayer input (sprite player)
         -- Jumping.
-        when (padUp input && (player ~> (body >>> touchingDown))) $
-            player ~> (body >>> velocity >>> setY (-350))
+        let onGround = player ~> (sprite >>> body >>> touchingDown)
+        when (padUp input && onGround) $
+            player ~> (sprite >>> body >>> velocity >>> setY (-350))
 
     where
         enumerate :: [a] -> [(Int, a)]
         enumerate = zip [1..]
 
-        starCollisionHandler addScore getter _ star = do
+        {-
+        updateScoreText :: Int -> Fay ()
+        updateScoreText 1 = fmap player1 (get state) >>= updater
+        updateScoreText 2 = fmap player2 (get state) >>= updater
+        
+        updater Player{..} = setText scoreText $ show score
+        -}
+
+        starCollisionHandler addScore player _ star = do
             addScore state 1
-            createParticleBurst getter (vectorToTuple $ position star)
+            --updateScoreText player
+            createParticleBurst (emitter player) (vectorToTuple $ position star)
             kill star
 
-        createParticleBurst :: ((Emitter, Emitter) -> Emitter) -> (Double, Double) -> Fay ()
-        createParticleBurst getter pos = do
-            emitter <- fmap (getter . emitters) (get state)
+        createParticleBurst :: Emitter -> (Double, Double) -> Fay ()
+        createParticleBurst emitter pos = do
             setEmitterPos emitter pos
             emitterBurst emitter 2000 25
 
