@@ -42,13 +42,23 @@ body {
     font-size: 30px;
 }
 
-.player2score {
+.player2score{
     float:left;
     margin: 20px;
     left:20px;
     font-size: 30px;
 }
 
+.player1win, .player2win {
+    float:right;
+    font-size: 40px;
+    position: relative;
+    top:300px;
+}
+
+.player2win {
+    float:left;
+}
 
 .timeLeft {
     position: absolute;

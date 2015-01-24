@@ -40,6 +40,15 @@ body {
   left: 20px;
   font-size: 30px; }
 
+.player1win, .player2win {
+  float: right;
+  font-size: 40px;
+  position: relative;
+  top: 300px; }
+
+.player2win {
+  float: left; }
+
 .timeLeft {
   position: absolute;
   top: 300px;

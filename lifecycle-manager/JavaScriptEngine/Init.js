@@ -8,15 +8,16 @@
 //                                                        |___/                                        |___/                                
 //
 //
-//  qa___        ___             _     
+//  ___        ___             _     
 // | _ )_  _  / __| __ _ _ __ (_)_ _ 
 // | _ \ || | \__ \/ _` | '  \| | '_|
 // |___/\_, | |___/\__,_|_|_|_|_|_|  
 //      |__/                         
 
-var defaultGameNumber = 1;
+var defaultGameNumber = -1; // -1 niin randomi päällä
 
 var games = [
+    "./../mini-games/mathMadness/index.html",
     "./../mini-games/FLAPPY/index.html",
     "./../mini-games/HuntTheOther/index.html",
     "./../mini-games/PRESSMOREBUTTONS/index.html",
@@ -68,6 +69,8 @@ $(document).ready(function(){
 function Init(){
     $("#player1score").text(life);
     $("#player2score").text(life);
+     $(".player1win,.player2win").hide();
+    
     $("#main_canvas").show( 500 ,"swing", showGameHubAndStartGame);
     playMainSong();
     $(document).bind('onGameEnd',startNextGame);
@@ -124,12 +127,15 @@ function randomInt(min,max) {
 }
 
 function countScores(val){
+    $(".player1win, .player2win").hide();
     if(val === 1){
         $("#player2score").text(--player2score);
+        $(".player1win").show();
     }
     else
     if (val === 2){
         $("#player1score").text(--player1score);
+        $(".player2win").show();
     }
 
     checkGameEnd();
