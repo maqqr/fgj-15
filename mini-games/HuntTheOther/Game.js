@@ -91,6 +91,7 @@ function shootTarget(target){
 		//jimmu.score++;
 		huntedPlayer.destroy();
 		target.score++;
+		game.time.events.add(Phaser.Timer.SECOND * 1, endGame, this);
 	}
 	var explosion = game.add.sprite(target.sprite.body.x+target.sprite.body.halfWidth * 0.5 , target.sprite.body.y  + target.sprite.body.halfHeight* 0.5, 'explosion');
 	game.time.events.add(Phaser.Timer.SECOND * startTime, function()
