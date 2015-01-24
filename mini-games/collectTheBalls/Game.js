@@ -104,9 +104,7 @@ function endGame(){
 	else
 		result = 0;
 		
-	game.time.events.add(Phaser.Timer.SECOND * 1, function(){
-			destroy(result);
-			}, this);
+	parent.$(parent.document).trigger("onGameEnd",result);
 }
 
 
