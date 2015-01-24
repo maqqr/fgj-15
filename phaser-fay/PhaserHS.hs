@@ -14,6 +14,9 @@ data BitmapText
 data Animation
 
 
+endGame :: Int -> Fay ()
+endGame = ffi "parent.$(parent.document).trigger(\"onGameEnd\",%1)"
+
 random :: Fay Double
 random = ffi "Math.random()"
 

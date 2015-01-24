@@ -8,7 +8,10 @@ import PhaserHS
 import Arrows
 import Utils
 
-playerSpeed = 100
+playerSpeed = 130
+
+--assetDir = ""
+assetDir = "./../../"
 
 data Player = Player
     { sprite     :: Sprite
@@ -34,15 +37,15 @@ preloadGame :: Game -> Fay ()
 preloadGame game = do
     putStrLn "Preloading....."
     mapM_ (uncurry $ loadImage game)
-        [("ground", "platform.png")
-        ,("star", "star.png")
-        ,("bluepart", "bluepart.png")
-        ,("redpart", "redpart.png")]
-    loadSpriteSheet game "bluedude" "blueplayer.png" (20, 32)
-    loadSpriteSheet game "reddude" "redplayer.png" (20, 32)
-    loadSpriteSheet game "bluesword" "bluesword.png" (40, 32)
-    loadSpriteSheet game "redsword" "redsword.png" (40, 32)
-    loadBitmapFont game "testfont" "font.png" "font.fnt"
+        [("ground", assetDir ++ "platform.png")
+        ,("star", assetDir ++ "star.png")
+        ,("bluepart", assetDir ++ "bluepart.png")
+        ,("redpart", assetDir ++ "redpart.png")]
+    loadSpriteSheet game "bluedude" (assetDir ++ "blueplayer.png") (20, 32)
+    loadSpriteSheet game "reddude" (assetDir ++ "redplayer.png") (20, 32)
+    loadSpriteSheet game "bluesword" (assetDir ++ "bluesword.png") (40, 32)
+    loadSpriteSheet game "redsword" (assetDir ++ "redsword.png") (40, 32)
+    loadBitmapFont game "testfont" (assetDir ++ "font.png") (assetDir ++ "font.fnt")
 
 
 changeTexture :: Player -> String -> String -> Fay ()
@@ -120,7 +123,7 @@ createGame game = do
     enableBody stars True
     repeatTimer game (2 * seconds) 5 $ createStar game stars
 
-    txt <- newText game "testfont" 64 (260, 100) "Collect\n stars!"
+    txt <- newText game "testfont" 64 (260, 100) "Collect\n     3\n stars!"
     singleShot game (3 * seconds) $ destroy txt
 
     return $ GameState physics player1' player2' platforms stars
@@ -178,6 +181,9 @@ updateGame game state = do
     swordFight player1 player2 updatePlayer2
     swordFight player2 player1 updatePlayer1
 
+    checkEnd player1 1
+    checkEnd player2 2
+
     -- Star collection.
     overlap physics (sprite player1) stars $ starCollisionHandler updatePlayer1 player1
     overlap physics (sprite player2) stars $ starCollisionHandler updatePlayer2 player2
@@ -210,6 +216,12 @@ updateGame game state = do
     where
         enumerate :: [a] -> [(Int, a)]
         enumerate = zip [1..]
+
+        checkEnd :: Player -> Int -> Fay ()
+        checkEnd Player{..} index =
+            when (score >= 3) $ do
+                destroy game
+                endGame index
 
         swordFight :: Player -> Player -> PlayerUpdater -> Fay ()
         swordFight attacker defender defenderUpdater =
