@@ -163,12 +163,13 @@ function endGame(){
 	else
 		result = 0;
 		
-	parent.$(parent.document).trigger("onGameEnd",result);
+	destroy(result);
 }
 
 
 function destroy(gameResult){
 	parent.$(parent.document).trigger("onGameEnd",gameResult);
+	game.destroy();
 
 }
 
