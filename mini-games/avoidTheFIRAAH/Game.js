@@ -12,6 +12,8 @@ var startingText = "Stay on top of the platform!";
 var startingTextComponent;
 var player1Text;
 var player2Text;
+var gameEnded = false;
+var layer;
 var map;
 
 function preload()
@@ -31,8 +33,8 @@ function create(){
 	createBackground();
 	createLevel();
 	
-	jammu = createPlayer('jammu', 1, false, 200, 100);
-	jimmu = createPlayer('jimmu', 2, false, 600, 100);	
+	jammu = createPlayer('jammu', 1, false, 150, 100);
+	jimmu = createPlayer('jimmu', 2, false, 650, 500);	
 	jimmu.sprite.body.bounce.setTo(1,1);
 	jammu.sprite.body.bounce.setTo(1,1);
 	//game.physics.arcade.enable(jimmu);
@@ -49,17 +51,16 @@ function create(){
 
 function createLevel(){
 	map = game.add.tilemap('level');
-
     map.addTilesetImage('violetTiles');
 
-    map.setCollisionByExclusion([ 13, 14, 15, 16, 46, 47, 48, 49, 50, 51 ]);
+    map.setCollisionByExclusion([ 0 ]);
 
     layer = map.createLayer('Tile Layer 1');
 
     //  Un-comment this on to see the collision tiles
     // layer.debug = true;
 
-  //  layer.resizeWorld();
+    layer.resizeWorld();
 
    // game.physics.arcade.gravity.y = 250;
 
@@ -79,14 +80,6 @@ function createBackground(){
 }
 
 
-function createRandomBall(){
-	ball = game.add.sprite(game.rnd.integerInRange(0+25, 800-25), game.rnd.integerInRange(0+25, 600-25), 'ball');
-	game.physics.arcade.enable(ball);
-	ball.body.immovable = true;
-
-}
-
-
 function start(){
 	jimmu.setActivity(true);
 	jammu.setActivity(true);
@@ -95,7 +88,7 @@ function start(){
 
 
 function createPlayer(spriteName, playerKeyboardNumber, activity, x, y){
-	var player = new Player(spriteName , game, speed, x, y);
+	var player = new Player(spriteName , game, speed, x, y, playerKeyboardNumber);
 	player.setActivity(activity);
 	player.registerPlayerAs(playerKeyboardNumber);
 	return player;
@@ -105,20 +98,20 @@ function createPlayer(spriteName, playerKeyboardNumber, activity, x, y){
 function defineText(playerNumber){
 	var text = "Game on!";
 	if(playerNumber == 1){
-		if(jammu.score === 1){
+		if(jammu.score >= 1){
 		text = "You have won!";
 		
 		}
-		else if( jimmu.score === 1){
+		else if( jimmu.score >= 1){
 		 text = "You have lost";
 		}
 	}
 	else{
-		if(jimmu.score === 1){
+		if(jimmu.score >= 1){
 		text = "You have won!";
 		
 		}
-		else if( jammu.score === 1){
+		else if( jammu.score >= 1){
 		 text = "You have lost";
 		}
 	}
@@ -126,11 +119,33 @@ function defineText(playerNumber){
 }
 
 
+function getTileAmount(body){
+	var tiles = layer.getRayCastTiles(new Phaser.Line(body.x +20 , body.y+20, body.x + body.width-20, body.y + body.height-20));
+	return tiles.length;
+}
+
 
 function update(){
 	if(game.time.totalElapsedSeconds() >= maxTime + startTime) endGame();
 	game.physics.arcade.collide(jimmu.sprite, jammu.sprite);
-
+	
+	if( getTileAmount(jimmu.sprite.body) === 0){
+		jimmu.destroy();
+		jammu.score++;
+		game.time.events.add(Phaser.Timer.SECOND * 1, function(){
+			endGame();
+			}, this);
+	}
+	
+	if( getTileAmount(jammu.sprite.body) === 0){
+		jammu.destroy();
+		jimmu.score++;
+		game.time.events.add(Phaser.Timer.SECOND * 1, function(){
+			endGame();
+			}, this);
+	}
+	
+	
 	filter.update();
 	
 	player1Text.text = defineText(1);
@@ -141,28 +156,29 @@ function update(){
 
 
 function endGame(){
+	if(gameEnded) return;
+	gameEnded = true;
 	game.add.text(lvlWidth *0.5 -50, lvlHeight * 0.5 -10, 'Game Over!', { fontSize: '22px', fill: '#fff' });
 	
 	jimmu.setActivity(false);
 	jammu.setActivity(false);
 	
+	var result = 0;
+	
 	if(jammu.score > jimmu.score)
-		//Jammu won
-		;
+		result = 1;
 	else if(jammu.score < jimmu.score)
-		//jimmu won
-		;
+		result = 2;
 	else
-		//its a tie
-		;
+		result = 0;
 		
-	game.time.events.add(Phaser.Timer.SECOND * 1, function(){
-			destroy();
-			}, this);
+		
+	destroy(result);
 }
 
 
-function destroy(){
-
+function destroy(gameResult){
+	parent.$(parent.document).trigger("onGameEnd",gameResult);
+	game.destroy();
 
 }
