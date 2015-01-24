@@ -97,7 +97,14 @@ updateGame game state = do
                     modify state $ \g -> g { over = True }
                     singleShot game (1 * seconds) $ do
                         destroy game
-                        endGame (index + 1)
+                        if correct then
+                            endGame (index + 1)
+                            else
+                                endGame (otherIndex (index + 1))
+
+        otherIndex :: Int -> Int
+        otherIndex 1 = 2
+        otherIndex 2 = 1
 
         -- Returns player's choice as Int index.
         getChoice :: GamePadInput -> Maybe Int
