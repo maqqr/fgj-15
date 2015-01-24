@@ -109,12 +109,12 @@ function addBodies() {
 
 function bird1Collision(bird, wall)
 {
-	//parent.$(parent.document).trigger("onGameEnd",2);
+	parent.$(parent.document).trigger("onGameEnd",2);
 	game.destroy();
 }
 
 function bird2Collision(bird, wall)
 {
-	//parent.$(parent.document).trigger("onGameEnd",1);
+	parent.$(parent.document).trigger("onGameEnd",1);
 	game.destroy();
 }
