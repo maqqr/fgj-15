@@ -12,6 +12,7 @@ playerSpeed = 100
 
 data Player = Player
     { sprite    :: Sprite
+    , texPrefix :: String
     , score     :: Int
     , scoreText :: BitmapText
     , emitter   :: Emitter
@@ -35,9 +36,21 @@ preloadGame game = do
         ,("star", "star.png")
         ,("bluepart", "bluepart.png")
         ,("redpart", "redpart.png")]
-    loadSpriteSheet game "dudeblue" "blueplayer.png" (20, 32)
-    loadSpriteSheet game "dudered" "redplayer.png" (20, 32)
+    loadSpriteSheet game "bluedude" "blueplayer.png" (20, 32)
+    loadSpriteSheet game "reddude" "redplayer.png" (20, 32)
+    loadSpriteSheet game "bluesword" "bluesword.png" (40, 32)
+    loadSpriteSheet game "redsword" "redsword.png" (40, 32)
     loadBitmapFont game "testfont" "font.png" "font.fnt"
+
+
+changeTexture :: Sprite -> String -> Fay ()
+changeTexture player texSuffix = return () -- TODO
+-- (http://stackoverflow.com/a/25396894)
+--function changeTexture () {
+--    sprite.loadTexture("sea_creature");
+--    sprite.animations.add("sea_creature", specificFramesToUse, frameRate, whetherToLoop, whetherToUseANumericIndex);
+--    sprite.animations.play("sea_creature");
+--}
 
 
 -- | Creates player sprite.
@@ -45,11 +58,10 @@ createPlayer :: Game
              -> Physics
              -> (Double, Double) -- ^ Player start position.
              -> (Double, Double) -- ^ Player score text position.
-             -> String -- ^ Player texture name.
-             -> String -- ^ Star collection particle texture
+             -> String -- ^ Player texture name prefix.
              -> Fay Player
-createPlayer game physics startPos textPos texName effectTexName = do
-    sprite <- newSprite game texName (50, 50)
+createPlayer game physics startPos textPos texPre = do
+    sprite <- newSprite game (texPre ++ "dude") (50, 50)
     enable physics sprite
     sprite ~> (body >>> gravity >>> setY 300)
     sprite ~> (anchor >>> setTo (0.5, 0.5))
@@ -59,7 +71,7 @@ createPlayer game physics startPos textPos texName effectTexName = do
 
     addAnimation sprite "walk" [0 .. 7] 10 True
     playAnimation sprite "walk"
-    Player `fmap` return sprite <*> return 0 <*> createScoreDisplay <*> createEffect effectTexName
+    Player `fmap` return sprite <*> return texPre <*> return 0 <*> createScoreDisplay <*> createEffect (texPre ++ "part")
     where
         createScoreDisplay :: Fay BitmapText
         createScoreDisplay = newText game "testfont" 64 textPos "0"
@@ -91,8 +103,8 @@ createGame game = do
 
     -- Create players.
     let cp = createPlayer game physics
-    player1' <- cp (740, 50) (710, 50) "dudeblue" "bluepart"
-    player2' <- cp (60, 50) (30, 50) "dudered" "redpart"
+    player1' <- cp (740, 50) (710, 50) "blue"
+    player2' <- cp (60, 50) (30, 50) "red"
 
     stars <- newGroup game
     enableBody stars True
