@@ -95,23 +95,22 @@ function endGame(){
 	jimmu.setActivity(false);
 	jammu.setActivity(false);
 	
+	var result = 0;
+	
 	if(jammu.score > jimmu.score)
-		//Jammu won
-		;
+		result = 1;
 	else if(jammu.score < jimmu.score)
-		//jimmu won
-		;
+		result = 2;
 	else
-		//its a tie
-		;
+		result = 0;
 		
 	game.time.events.add(Phaser.Timer.SECOND * 1, function(){
-			destroy();
+			destroy(result);
 			}, this);
 }
 
 
-function destroy(){
-
+function destroy(gameResult){
+	parent.$(parent.document).trigger("onGameEnd",gameResult);
 
 }

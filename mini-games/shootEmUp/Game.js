@@ -157,20 +157,20 @@ function endGame(){
 	jammu.setActivity(false);
 	
 	if(jammu.score > jimmu.score)
-		//Jammu won
-		;
+		result = 1;
 	else if(jammu.score < jimmu.score)
-		//jimmu won
-		;
+		result = 2;
 	else
-		//its a tie
-		;
-	game.time.events.add(Phaser.Timer.SECOND * 1.5, function(){
-			destroy();
+		result = 0;
+		
+	game.time.events.add(Phaser.Timer.SECOND * 1, function(){
+			destroy(result);
 			}, this);
 }
 
-function destroy(){
+
+function destroy(gameResult){
+	parent.$(parent.document).trigger("onGameEnd",gameResult);
 
 }
 
