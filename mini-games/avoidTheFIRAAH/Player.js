@@ -7,12 +7,21 @@ function Player(sprite, game, speed, x, y, playerNumber){
 	this.score = 0;
 	this.playerNumber = playerNumber;
 	this.isActive = false;
+
 	this.isLoading = false;
 	this.lastShot = 0;
 	this.loaded = 0;
 	this.sprite = game.add.sprite(x, y, sprite)
 	game.physics.arcade.enable(this.sprite);
+
+
 }
+
+
+Player.prototype.setBounce = function(x, y){
+	this.sprite.body.bounce.setTo(x, y);
+}
+
 
 
 Player.prototype.destroy = function(){
