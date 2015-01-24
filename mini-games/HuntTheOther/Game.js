@@ -49,12 +49,14 @@ function create(){
 		assignAsHunted(jammu);
 		huntedPlayer = jammu;
 		jimmu = createPlayer('target', 2, speed *1.5, false, 400, 300);
+		jimmu.canMoveDiagonal = true;
 		jimmu.shoot = function(){ shootTarget(jimmu);};
 	}
 	else{
 		jimmu = createPlayer('jimmu', 2, speed, false,  player2StartX, player2StartY);
 		huntedPlayer = jimmu;
 		jammu = createPlayer('target', 1, speed*1.5, false, 400, 300);
+		jammu.canMoveDiagonal = true;
 		jammu.shoot = function(){ shootTarget(jammu);};
 	}
 	

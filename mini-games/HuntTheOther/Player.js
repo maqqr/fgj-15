@@ -10,6 +10,7 @@ function Player(sprite, game, speed, x, y, playerNumber){
 	this.isActive = false;
 	this.shoot = function(){};
 	this.lastShot = 0;
+	this.canMoveDiagonal = false;
 	this.sprite = game.add.sprite(x, y, sprite)
 	game.physics.arcade.enable(this.sprite);
 
@@ -88,27 +89,48 @@ Player.prototype.update = function(game){
 		}
 
 	}
-	
-	if(game.input.keyboard.isDown(this.left))
-	{
-		moveWithinField(-this.speed, 0, this.sprite);
-	}
-	else if(game.input.keyboard.isDown(this.right))
-	{
-		moveWithinField(this.speed, 0, this.sprite);
-	}
-	else if(game.input.keyboard.isDown(this.down))
-	{
-		moveWithinField(0, this.speed, this.sprite);
-	}
-	else if(game.input.keyboard.isDown(this.up))
-	{
-		moveWithinField(0, -this.speed, this.sprite);
-	}
-	else
-	{
-		this.sprite.body.velocity.x = 0;
-		this.sprite.body.velocity.y = 0;
+	if(this.canMoveDiagonal){
+		var xSpeed = 0;
+		var ySpeed = 0;
+		if(game.input.keyboard.isDown(this.left))
+		{
+			xSpeed = -this.speed;
+		}
+		else if(game.input.keyboard.isDown(this.right))
+		{
+			xSpeed = this.speed;
+		}
+		if(game.input.keyboard.isDown(this.down))
+		{
+			ySpeed= this.speed;
+		}
+		else if(game.input.keyboard.isDown(this.up))
+		{
+			ySpeed= -this.speed;
+		}
+		moveWithinField(xSpeed, ySpeed, this.sprite);
+	}else{
+		if(game.input.keyboard.isDown(this.left))
+		{
+			moveWithinField(-this.speed, 0, this.sprite);
+		}
+		else if(game.input.keyboard.isDown(this.right))
+		{
+			moveWithinField(this.speed, 0, this.sprite);
+		}
+		else if(game.input.keyboard.isDown(this.down))
+		{
+			moveWithinField(0, this.speed, this.sprite);
+		}
+		else if(game.input.keyboard.isDown(this.up))
+		{
+			moveWithinField(0, -this.speed, this.sprite);
+		}
+		else
+		{
+			this.sprite.body.velocity.x = 0;
+			this.sprite.body.velocity.y = 0;
+		}
 	}
 }
 
