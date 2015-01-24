@@ -19,7 +19,7 @@ var player2StartY = 100;
 var player1StartX = 725;
 var player1StartY = 500;
 var balls = [];
-var destroyed = false;
+var gameEnded = false;
 init();
 
 function init(){
@@ -83,7 +83,7 @@ function createPlayer(spriteName, playerKeyboardNumber, activity, x, y){
 
 
 function update(){
-	if(game.time.totalElapsedSeconds() >= maxTime + startTime) destroy();
+	if(game.time.totalElapsedSeconds() >= maxTime + startTime) endGame();
 	game.physics.arcade.collide(jimmu.sprite, jammu.sprite);
 	for	(var i = 0; i < balls.length; i++){
 		for(var j = 0; j < spikes.length; j++){
@@ -97,7 +97,7 @@ function update(){
 			jimmu.sprite.destroy();
 			jammu.score++;
 			game.time.events.add(Phaser.Timer.SECOND * 1, function(){
-			destroy();
+			endGame();
 			}, this);
 		}, null, null);
 		game.physics.arcade.collide(jammu.sprite, balls[i], function()
@@ -105,7 +105,7 @@ function update(){
 			jammu.sprite.destroy();
 			jimmu.score++;
 			game.time.events.add(Phaser.Timer.SECOND * 1, function(){
-			destroy();
+			endGame();
 			}, this);
 		}, null, null);
 		
@@ -143,9 +143,9 @@ function defineText(playerNumber){
 	return text;
 }
 
-function destroy(){
-	if(destroyed) return;
-	destroyed = true;
+function endGame(){
+	if(gameEnded) return;
+	gameEnded = true;
 	game.add.text(lvlWidth *0.5 -50, lvlHeight * 0.5 -10, 'Game Over!', { fontSize: '22px', fill: '#fff' });
 	
 	balls.forEach(function(element, index, array){
@@ -165,4 +165,12 @@ function destroy(){
 	else
 		//its a tie
 		;
+	game.time.events.add(Phaser.Timer.SECOND * 1.5, function(){
+			destroy();
+			}, this);
 }
+
+function destroy(){
+
+}
+

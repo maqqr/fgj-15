@@ -65,7 +65,7 @@ function createPlayer(spriteName, playerKeyboardNumber, activity, x, y){
 
 
 function update(){
-	if(game.time.totalElapsedSeconds() >= maxTime + startTime) destroy();
+	if(game.time.totalElapsedSeconds() >= maxTime + startTime) endGame();
 	game.physics.arcade.collide(jimmu.sprite, jammu.sprite);
 	for(var i = 0; i < spikes.length; i++)
 	{
@@ -88,9 +88,17 @@ function update(){
 }
 
 
-function destroy(){
+function endGame(){
 	game.add.text(lvlWidth *0.5 -50, lvlHeight * 0.5 -10, 'Game Over!', { fontSize: '22px', fill: '#fff' });
 	
 	jimmu.setActivity(false);
 	jammu.setActivity(false);
+	
+	game.time.events.add(Phaser.Timer.SECOND * 1, function(){
+			destroy();
+			}, this);
+}
+
+function destroy(){
+
 }
