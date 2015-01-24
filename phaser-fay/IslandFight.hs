@@ -1,5 +1,5 @@
 {-# LANGUAGE RecordWildCards #-}
-module StarCollection where
+module IslandFight where
 
 import Prelude
 import Data.Function
@@ -8,7 +8,7 @@ import PhaserHS
 import Arrows
 import Utils
 
-playerSpeed = 180
+playerSpeed = 150
 
 --assetDir = ""
 assetDir = "./../../Assets/"
@@ -16,9 +16,6 @@ assetDir = "./../../Assets/"
 data Player = Player
     { sprite     :: Sprite
     , texPrefix  :: String
-    , score      :: Int
-    , scoreText  :: BitmapText
-    , emitter    :: Emitter
     , swordTimer :: Int
     , hurtTimer  :: Int
     }
@@ -28,7 +25,8 @@ data GameState = GameState
     , player1   :: Player
     , player2   :: Player
     , platforms :: Group
-    , stars     :: Group
+    , platformsSprites :: [Sprite]
+    , shrinkTimer :: Int
     }
 
 
@@ -37,7 +35,7 @@ preloadGame :: Game -> Fay ()
 preloadGame game = do
     putStrLn "Preloading....."
     mapM_ (uncurry $ loadImage game)
-        [("ground", assetDir ++ "platform.png")
+        [("ground", assetDir ++ "platform2.png")
         ,("star", assetDir ++ "star.png")
         ,("bluepart", assetDir ++ "bluepart.png")
         ,("redpart", assetDir ++ "redpart.png")]
@@ -73,25 +71,8 @@ createPlayer game physics startPos textPos texPre = do
     sprite ~> (anchor >>> setTo (0.5, 0.5))
     sprite ~> (position >>> setTo startPos)
     sprite ~> (scale >>> setTo (3, 3))
-    sprite ~> (body >>> flip collideWorldBounds True)
 
-    Player `fmap` return sprite
-              <*> return texPre
-              <*> return 0
-              <*> createScoreDisplay
-              <*> createEffect (texPre ++ "part")
-              <*> return 0
-              <*> return 0
-    where
-        createScoreDisplay :: Fay BitmapText
-        createScoreDisplay = newText game "testfont" 64 textPos "0"
-
-        createEffect :: String -> Fay Emitter
-        createEffect particleTexName = do
-            emitter <- newEmitter game (0, 0) 50 [particleTexName]
-            setParticleMaxSpeed emitter (-400, -400)
-            setParticleMinSpeed emitter (800, 800)
-            return emitter
+    return $ Player sprite texPre 0 0
 
 
 -- | Creates initial game state.
@@ -106,9 +87,11 @@ createGame game = do
     enableBody platforms True
 
     -- Create ground floor.
-    ground <- create platforms "ground" (0, (height . world $ game) - 64)
-    ground `setWidth` 800
+    ground <- create platforms "ground" (0, 0)
+    ground ~> (anchor >>> setTo (0.5, 0.5))
+    ground `setWidth` 750
     ground `setHeight` 64
+    ground ~> (position >>> setTo (400, (height . world $ game) - 64))
     setImmovable (body ground) True
 
     -- Create players.
@@ -119,14 +102,10 @@ createGame game = do
     -- Set default animations.
     forM_ [player1', player2'] $ \p -> changeTexture p "dude" "walk"
 
-    stars <- newGroup game
-    enableBody stars True
-    repeatTimer game (2 * seconds) 5 $ createStar game stars
-
-    txt <- newText game "testfont" 64 (260, 100) "Collect\n     3\n stars!"
+    txt <- newText game "testfont" 64 (260, 100) "Don't fall\n  down!"
     singleShot game (3 * seconds) $ destroy txt
 
-    return $ GameState physics player1' player2' platforms stars
+    return $ GameState physics player1' player2' platforms [ground] 0
     where
         createStar :: Game -> Group -> Fay ()
         createStar game stars = do
@@ -154,19 +133,6 @@ updatePlayer2 state updateFunc =
     modify state $ \g -> g { player2 = updateFunc $ player2 g }
 
 
--- | Adds score to player.
-addScore :: Int -> Player -> Player
-addScore x p = p { score = score p + x }
-
-
--- | Updates player's score label text.
-updateScoreDisplay :: Player -> Fay ()
-updateScoreDisplay player = do
-    --currentState <- get state
-    --let player = getter currentState
-    setText (scoreText player) $ show (score player + 1)    
-
-
 -- | Updates game state.
 updateGame :: Game -> State GameState -> Fay ()
 updateGame game state = do
@@ -176,17 +142,20 @@ updateGame game state = do
     -- Physics.
     collider (sprite player1) platforms
     collider (sprite player2) platforms
-    collider stars platforms
 
     swordFight player1 player2 updatePlayer2
     swordFight player2 player1 updatePlayer1
 
-    checkEnd player1 1
-    checkEnd player2 2
+    checkEnd player1 2
+    checkEnd player2 1
 
-    -- Star collection.
-    overlap physics (sprite player1) stars $ starCollisionHandler updatePlayer1 player1
-    overlap physics (sprite player2) stars $ starCollisionHandler updatePlayer2 player2
+    -- Shrink platforms.
+    modify state $ \g -> g { shrinkTimer = shrinkTimer + 1 }
+    when (shrinkTimer > 200) $ do
+        modify state $ \g -> g { shrinkTimer = 0 }
+        forM_ platformsSprites $ \plat ->
+            let oldX = plat ~> (scale >>> getX)
+            in plat ~> (scale >>> setX (oldX * 0.8))
 
     -- Update both players.
     forM_ (enumerate [(player1, updatePlayer1), (player2, updatePlayer2)]) $ \(i, (player, updater)) -> do
@@ -217,9 +186,10 @@ updateGame game state = do
         enumerate :: [a] -> [(Int, a)]
         enumerate = zip [1..]
 
+        -- Ends game when player is outside of screen.
         checkEnd :: Player -> Int -> Fay ()
-        checkEnd Player{..} index =
-            when (score >= 3) $ do
+        checkEnd Player{..} index = do
+            when (getY (position sprite) >= 600) $ do
                 destroy game
                 endGame index
 
@@ -234,18 +204,6 @@ updateGame game state = do
             in when (closeEnough && attacking) $ do
                 (sprite defender) ~> (body >>> velocity >>> setX force)
                 defenderUpdater state $ \p -> p { hurtTimer = 20 }
-
-        -- Handles collisions between players and stars.
-        starCollisionHandler playerUpdater player _ star = do
-            playerUpdater state (addScore 1)
-            updateScoreDisplay player
-            createParticleBurst (emitter player) (vectorToTuple $ position star)
-            kill star
-
-        createParticleBurst :: Emitter -> (Double, Double) -> Fay ()
-        createParticleBurst emitter pos = do
-            setEmitterPos emitter pos
-            emitterBurst emitter 2000 25
 
         updatePlayer :: GamePadInput -> Player -> PlayerUpdater -> Fay ()
         updatePlayer pad player@Player{..} update

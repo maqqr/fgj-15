@@ -1,0 +1,36 @@
+2015.01.24 17:38:15.734 Info   Starting JoyToKey Ver5.6
+2015.01.24 17:38:15.734 Info   ExeFile=C:\dev\FGJ\FGJ2015\fgj-15\JoyToKey_en\JoyToKey.exe
+2015.01.24 17:38:15.734 Info   ConfigDir=C:\dev\FGJ\FGJ2015\fgj-15\JoyToKey_en\
+2015.01.24 17:38:15.734 Info   IniFile=C:\dev\FGJ\FGJ2015\fgj-15\JoyToKey_en\JoyToKey.ini
+2015.01.24 17:38:15.734 Info   Windows Version = 6.2
+2015.01.24 17:38:15.734 Info   Loaded VistaAPI.dll (Utils\Utils.cpp#199)
+2015.01.24 17:38:15.734 Info   LicenseKey "" is not valid
+2015.01.24 17:38:15.828 Info   Found a joystick: {7F209330-A3EF-11E4-8001-444553540000}, USB Gamepad , USB Gamepad 
+2015.01.24 17:38:15.828 Info   Preferred number = -1
+2015.01.24 17:38:15.828 Info   numAxis = 6
+2015.01.24 17:38:15.828 Info   numPOVs = 0
+2015.01.24 17:38:15.828 Info   numButtons = 10
+2015.01.24 17:38:15.828 Info   EnumDeviceObject: Axis offset=0 type=102 name=Y Axis
+2015.01.24 17:38:15.828 Info   EnumDeviceObject: Axis offset=4 type=2 name=X Axis
+2015.01.24 17:38:15.828 Info   EnumDeviceObject: Axis offset=8 type=602 name=X Axis
+2015.01.24 17:38:15.828 Info   EnumDeviceObject: Axis offset=12 type=702 name=X Axis
+2015.01.24 17:38:15.828 Info   EnumDeviceObject: Axis offset=16 type=802 name=X Axis
+2015.01.24 17:38:15.828 Info   EnumDeviceObject: Axis offset=20 type=902 name=Axis 9
+2015.01.24 17:38:15.828 Info   Found a joystick: {7F209330-A3EF-11E4-8002-444553540000}, USB Gamepad , USB Gamepad 
+2015.01.24 17:38:15.828 Info   Preferred number = -1
+2015.01.24 17:38:15.828 Info   numAxis = 6
+2015.01.24 17:38:15.828 Info   numPOVs = 0
+2015.01.24 17:38:15.828 Info   numButtons = 10
+2015.01.24 17:38:15.828 Info   EnumDeviceObject: Axis offset=0 type=102 name=Y Axis
+2015.01.24 17:38:15.828 Info   EnumDeviceObject: Axis offset=4 type=2 name=X Axis
+2015.01.24 17:38:15.828 Info   EnumDeviceObject: Axis offset=8 type=602 name=X Axis
+2015.01.24 17:38:15.828 Info   EnumDeviceObject: Axis offset=12 type=702 name=X Axis
+2015.01.24 17:38:15.828 Info   EnumDeviceObject: Axis offset=16 type=802 name=X Axis
+2015.01.24 17:38:15.828 Info   EnumDeviceObject: Axis offset=20 type=902 name=Axis 9
+2015.01.24 17:38:15.828 Info   DetectJoysticks: Detected 2 joystick(s)
+2015.01.24 17:38:15.828 Info   Joystick 1: USB Gamepad
+2015.01.24 17:38:15.828 Info   Joystick 2: USB Gamepad
+2015.01.24 17:38:15.828 Info   2 joysticks are detected (Joystick.cpp#109)
+2015.01.24 17:38:15.828 Info   ConfigDir=C:\dev\FGJ\FGJ2015\fgj-15\JoyToKey_en\*.cfg (ConfigFileManager.cpp#43)
+2015.01.24 17:38:15.828 Info   Failed to find AppLink.dat (AppLink\AppLinkManager.cpp#32)
+2015.01.24 17:38:15.843 Info   TimerInit: Initializing timer with x1 speed mode (interval = 16 msec)

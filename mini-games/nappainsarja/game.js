@@ -53,5 +53,13 @@ function end() {
 	controller2.active = false;
 	controller1.active = false;
 	game.add.text(800 *0.5 -85, 600 * 0.5 + 50, 'GAME OVER!', { fontSize: '22px', fill: '#f00' });
-	
+	if (controller1.score > controller2.score) {
+		parent.$(parent.document).trigger("onGameEnd",1);
+	}
+	else if (controller1.score < controller2.score) {
+		parent.$(parent.document).trigger("onGameEnd",2);
+	}
+	else
+		parent.$(parent.document).trigger("onGameEnd",0);
+	game.destroy();
 }
