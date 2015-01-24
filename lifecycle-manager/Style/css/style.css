@@ -16,18 +16,32 @@ body {
   border: 1px solid white;
   margin: 0;
   padding: 0;
-      margin-left: auto;
-      margin-right: auto; }
+  margin-left: auto;
+  margin-right: auto; }
 
 #game_canvas {
-  border: 1px solid white;
   position: relative;
-  top: -20px;
-  margin: 0;
+  margin: 20px;
   padding: 0;
-      margin-left: auto;
-      margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
   height: 600px;
   width: 800px; }
+
+.player1score {
+  float: right;
+  margin: 20px;
+  right: 20px;
+  font-size: 30px; }
+
+.player2score {
+  float: left;
+  margin: 20px;
+  left: 20px;
+  font-size: 30px; }
+
+#startGameButton {
+  margin-left: auto;
+  margin-right: auto; }
 
 /*# sourceMappingURL=style.css.map */
