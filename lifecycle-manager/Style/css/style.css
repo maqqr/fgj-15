@@ -40,6 +40,13 @@ body {
   left: 20px;
   font-size: 30px; }
 
+.timeLeft {
+  position: absolute;
+  top: 300px;
+  margin: 20px;
+  left: 20px;
+  font-size: 30px; }
+
 #startGameButton {
   margin-left: auto;
   margin-right: auto; }

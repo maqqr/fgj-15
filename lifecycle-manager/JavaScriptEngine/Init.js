@@ -8,15 +8,21 @@
 //                                                        |___/                                        |___/                                
 //
 //
-// ___        ___             _     
+//  qa___        ___             _     
 // | _ )_  _  / __| __ _ _ __ (_)_ _ 
 // | _ \ || | \__ \/ _` | '  \| | '_|
 // |___/\_, | |___/\__,_|_|_|_|_|_|  
 //      |__/                         
 
-
+var defaultGameNumber = 1;
 
 var games = [
+    "./../mini-games/FLAPPY/index.html",
+    "./../mini-games/HuntTheOther/index.html",
+    "./../mini-games/PRESSMOREBUTTONS/index.html",
+    "./../mini-games/islandFight/index.html",
+    "./../mini-games/nappainsarja/index.html",
+    "./../mini-games/avoidTheFIRAAH/index.html",
     "./../mini-games/starCollection/index.html",
     "./../mini-games/shootEmUp/index.html",
     "./../mini-games/collectTheBalls/index.html",
@@ -25,8 +31,9 @@ var games = [
     
 var life = 5;
 var currentGame = -1;
-var player1score = 5;
-var player2score = 5;
+var player1score = life;
+var player2score = life;
+var previousGame = -1;
 
 jQuery.fn.rotate = function(degrees) {
     $(this).css({'-webkit-transform' : 'rotate('+ degrees +'deg)',
@@ -36,19 +43,22 @@ jQuery.fn.rotate = function(degrees) {
     return $(this);
 };
 
-function nextGameUrl() {
-    currentGame++;
-    if(currentGame === games.length){
-        currentGame = 0;
-    }
-    return games[currentGame];
-}
-
 $(document).ready(function(){
     
     $("#main_canvas").hide();
+    $(".player").hide();
     // center the game hub to the screen
 
+    $('body,iframe').keypress(function (e) {
+        if (e.which == '98') { // start on 'b'
+            Init();
+        }
+        if (e.which == '121') { // seuraava peli on 'y'
+            Init();
+        }
+    });
+   
+    
     $('#startGameButton').click(function () {
         Init();
     }
@@ -59,8 +69,16 @@ function Init(){
     $("#player1score").text(life);
     $("#player2score").text(life);
     $("#main_canvas").show( 500 ,"swing", showGameHubAndStartGame);
+    playMainSong();
     $(document).bind('onGameEnd',startNextGame);
+    $(document).bind('onTimeUpdate',updateTime);
 }
+
+
+function updateTime(e, parameter) {
+    $("#timer").text(parameter);
+}
+
 
 function showGameHubAndStartGame(){
     startNextGame(null, 0);
@@ -89,6 +107,22 @@ function startNextGame(e, parameter) {
     $("#gameFrame").focus();
 }
 
+function nextGameUrl() {
+    previousGame = currentGame;
+    while (true) {
+        currentGame = randomInt(0, games.length - 1);
+        if (currentGame !== previousGame)
+            break;
+    }
+    if(defaultGameNumber !== -1) // estää randomisoinnin
+        return games[defaultGameNumber];;
+    return games[currentGame];
+}
+
+function randomInt(min,max) {
+    return Math.floor((Math.random() * max) + min);
+}
+
 function countScores(val){
     if(val === 1){
         $("#player2score").text(--player2score);
@@ -99,20 +133,21 @@ function countScores(val){
     }
 
     checkGameEnd();
-
 }
 
 function checkGameEnd() {
     if(player2score < 0) {
-        endGame();
         alert("player1 won !!");
+        endGame();
     }
     if(player1score < 0) {
-        endGame();
         alert("player2 won !!");
+        endGame();
     }
+    
 }
 
 function endGame() {
+    location.reload();
     $("#main_canvas").hide(500);
 }

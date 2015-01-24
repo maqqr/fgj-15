@@ -18,8 +18,8 @@ Controller.prototype.registerControllerAs = function(playerNumber){
 		this.right = "L".charCodeAt(0);
 		this.up = "I".charCodeAt(0);
 		this.down = "K".charCodeAt(0);
-		this.b = "N".charCodeAt(0);
-		this.a = "M".charCodeAt(0);
+		this.a = "N".charCodeAt(0);
+		this.b = "M".charCodeAt(0);
 
 		this.leftButton = game.input.keyboard.addKey("J".charCodeAt(0));
 		this.rightButton = game.input.keyboard.addKey("L".charCodeAt(0));
