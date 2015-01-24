@@ -11,6 +11,7 @@ data Group
 data World
 data Vector
 data BitmapText
+data Animation
 
 
 random :: Fay Double
@@ -73,6 +74,9 @@ setText = ffi "%1.setText(%2)"
 
 newSprite :: Game -> String -> (Double, Double) -> Fay Sprite
 newSprite = ffi "wrNewSprite(%*)"
+
+loadTexture :: Sprite -> String -> Fay ()
+loadTexture = ffi "%1.loadTexture(%2)"
 
 anchor :: Sprite -> Vector
 anchor = ffi "%1.anchor"

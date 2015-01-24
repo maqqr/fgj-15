@@ -49,6 +49,9 @@ function evalThunk(x) {
         var xx = x.value();
         return evalThunk(xx);
     }
+    if (x.value != undefined) {
+        return x.value;
+    }
     return x;
 }
 
@@ -98,19 +101,20 @@ function wrSetEmitterPos(emitter, pos) {
 // :: Game -> Int -> Fay GamePadInput
 function wrGetGamePadInput(game, padIndex) {
     var pad = [game.input.gamepad.pad1, game.input.gamepad.pad2][padIndex];
-    var ka = Phaser.Keyboard.O;
-    var kb = Phaser.Keyboard.L;
-    var kleft = Phaser.Keyboard.LEFT;
-    var kright = Phaser.Keyboard.RIGHT;
-    var kdown = Phaser.Keyboard.DOWN;
-    var kup = Phaser.Keyboard.UP;
+    var ka = Phaser.Keyboard.N;
+    var kb = Phaser.Keyboard.M;
+    var kleft = Phaser.Keyboard.J;
+    var kright = Phaser.Keyboard.L;
+    var kdown = Phaser.Keyboard.K;
+    var kup = Phaser.Keyboard.I;
+
     if (padIndex == 2) {
-        ka = Phaser.Keyboard.Q;
-        kb = Phaser.Keyboard.A;
-        kleft = Phaser.Keyboard.A;
-        kright = Phaser.Keyboard.D;
-        kdown = Phaser.Keyboard.S;
-        kup = Phaser.Keyboard.W;
+        ka = Phaser.Keyboard.A;
+        kb = Phaser.Keyboard.Q;
+        kleft = Phaser.Keyboard.S;
+        kright = Phaser.Keyboard.F;
+        kdown = Phaser.Keyboard.D;
+        kup = Phaser.Keyboard.E;
     }
 
     return { a:     getButton(pad, 1)  || game.input.keyboard.isDown(ka)
