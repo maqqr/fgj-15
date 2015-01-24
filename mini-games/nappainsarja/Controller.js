@@ -18,15 +18,15 @@ Controller.prototype.registerControllerAs = function(playerNumber){
 		this.right = "L".charCodeAt(0);
 		this.up = "I".charCodeAt(0);
 		this.down = "K".charCodeAt(0);
-		this.b = "N".charCodeAt(0);
-		this.a = "M".charCodeAt(0);
+		this.b = "M".charCodeAt(0);
+		this.a = "N".charCodeAt(0);
 
 		this.leftButton = game.input.keyboard.addKey("J".charCodeAt(0));
 		this.rightButton = game.input.keyboard.addKey("L".charCodeAt(0));
 		this.upButton = game.input.keyboard.addKey("I".charCodeAt(0));
 		this.downButton = game.input.keyboard.addKey("K".charCodeAt(0));
-		this.bButton = game.input.keyboard.addKey("N".charCodeAt(0));
-		this.aButton = game.input.keyboard.addKey("M".charCodeAt(0));
+		this.bButton = game.input.keyboard.addKey("M".charCodeAt(0));
+		this.aButton = game.input.keyboard.addKey("N".charCodeAt(0));
 	}
 	else if (playerNumber == 2) {
 		this.left = "S".charCodeAt(0);
