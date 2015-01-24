@@ -20,6 +20,9 @@ endGame = ffi "parent.$(parent.document).trigger(\"onGameEnd\",%1)"
 random :: Fay Double
 random = ffi "Math.random()"
 
+randomInt :: Int -> Int -> Fay Int
+randomInt = ffi "wrRandomInt(%1, %2)"
+
 newGame :: Int -> Int -> Fay Game
 newGame = ffi "wrNewGame(%*)"
 
