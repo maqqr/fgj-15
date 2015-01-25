@@ -1,5 +1,5 @@
 {-# LANGUAGE RecordWildCards #-}
-module IslandFight where
+module PurpleBall where
 
 import Prelude
 import Data.Function
@@ -10,8 +10,8 @@ import Utils
 
 playerSpeed = 180
 
---assetDir = ""
-assetDir = "./../../Assets/"
+assetDir = ""
+--assetDir = "./../../Assets/"
 
 data Player = Player
     { sprite     :: Sprite
@@ -25,8 +25,7 @@ data GameState = GameState
     , player1   :: Player
     , player2   :: Player
     , platforms :: Group
-    , platformsSprites :: [Sprite]
-    , shrinkTimer :: Int
+    , ball      :: Sprite
     }
 
 
@@ -35,7 +34,7 @@ preloadGame :: Game -> Fay ()
 preloadGame game = do
     putStrLn "Preloading....."
     mapM_ (uncurry $ loadImage game)
-        [("ground", assetDir ++ "platform2.png")
+        [("ground", assetDir ++ "platform.png")
         ,("star", assetDir ++ "star.png")
         ,("bluepart", assetDir ++ "bluepart.png")
         ,("redpart", assetDir ++ "redpart.png")]
@@ -43,6 +42,7 @@ preloadGame game = do
     loadSpriteSheet game "reddude" (assetDir ++ "redplayer.png") (20, 32)
     loadSpriteSheet game "bluesword" (assetDir ++ "bluesword.png") (40, 32)
     loadSpriteSheet game "redsword" (assetDir ++ "redsword.png") (40, 32)
+    loadSpriteSheet game "ball" (assetDir ++ "ball.png") (16, 32)
     loadBitmapFont game "testfont" (assetDir ++ "font.png") (assetDir ++ "font.fnt")
 
 
@@ -71,6 +71,7 @@ createPlayer game physics startPos textPos texPre = do
     sprite ~> (anchor >>> setTo (0.5, 0.5))
     sprite ~> (position >>> setTo startPos)
     sprite ~> (scale >>> setTo (3, 3))
+    sprite ~> (body >>> flip collideWorldBounds True)
 
     return $ Player sprite texPre 0 0
 
@@ -86,13 +87,11 @@ createGame game = do
     platforms <- newGroup game
     enableBody platforms True
 
-    -- Create ground floor.
-    ground <- create platforms "ground" (0, 0)
-    ground ~> (anchor >>> setTo (0.5, 0.5))
-    ground `setWidth` 750
-    ground `setHeight` 64
-    ground ~> (position >>> setTo (400, (height . world $ game) - 64))
-    setImmovable (body ground) True
+    -- Create platforms.
+    let makep = platf platforms
+    makep (400, 600) (800, 32)
+
+    makep (400, 116) (64, 16)
 
     -- Create players.
     let cp = createPlayer game physics
@@ -102,10 +101,16 @@ createGame game = do
     -- Set default animations.
     forM_ [player1', player2'] $ \p -> changeTexture p "dude" "walk"
 
-    txt <- newText game "testfont" 64 (260, 100) "Don't fall\n  down!"
+    ball <- newSprite game "ball" (400, 60)
+    ball ~> (anchor >>> setTo (0.5, 0.5))
+    ball ~> (scale >>> setTo (3, 3))
+    addAnimation ball "bounce" [0 .. 12] 15 True
+    playAnimation ball "bounce"
+
+    txt <- newText game "testfont" 64 (200, 100) "Run to the\npurple ball!"
     singleShot game (3 * seconds) $ destroy txt
 
-    return $ GameState physics player1' player2' platforms [ground] 0
+    return $ GameState physics player1' player2' platforms ball
     where
         createStar :: Game -> Group -> Fay ()
         createStar game stars = do
@@ -116,6 +121,15 @@ createGame game = do
             star ~> (scale >>> setTo (3, 3))
             star ~> (body >>> gravity >>> setY 80)
             star ~> (body >>> bounce >>> setY (0.7 + rBounce))
+
+        platf :: Group -> (Double, Double) -> (Double, Double) -> Fay()
+        platf gr pos (w, h) = do
+            ground <- create gr "ground" (0, 0)
+            ground ~> (anchor >>> setTo (0.5, 0.5))
+            ground `setWidth` w
+            ground `setHeight` h
+            ground ~> (position >>> setTo pos)
+            setImmovable (body ground) True
 
 
 type PlayerUpdater = State GameState -> (Player -> Player) -> Fay ()
@@ -148,14 +162,6 @@ updateGame game state = do
 
     checkEnd player1 2
     checkEnd player2 1
-
-    -- Shrink platforms.
-    modify state $ \g -> g { shrinkTimer = shrinkTimer + 1 }
-    when (shrinkTimer > 200) $ do
-        modify state $ \g -> g { shrinkTimer = 0 }
-        forM_ platformsSprites $ \plat ->
-            let oldX = plat ~> (scale >>> getX)
-            in plat ~> (scale >>> setX (oldX * 0.8))
 
     -- Update both players.
     forM_ (enumerate [(player1, updatePlayer1), (player2, updatePlayer2)]) $ \(i, (player, updater)) -> do
