@@ -30,7 +30,8 @@ var games = [
     "./../mini-games/dontHurtYourself/index.html"
     ];
     
-var life = 5;
+var life = 10;
+var linearGameChangeEnabled = true ;
 var currentGame = -1;
 var player1score = life;
 var player2score = life;
@@ -111,15 +112,34 @@ function startNextGame(e, parameter) {
 }
 
 function nextGameUrl() {
-    previousGame = currentGame;
-    while (true) {
-        currentGame = randomInt(0, games.length - 1);
-        if (currentGame !== previousGame)
-            break;
+    if(linearGameChangeEnabled) {
+        linearNextGame();
+    }
+    else {
+        randomize();
     }
     if(defaultGameNumber !== -1) // estää randomisoinnin
         return games[defaultGameNumber];;
     return games[currentGame];
+}
+
+function linearNextGame() {
+    ++currentGame ;
+    if(currentGame  === games.length) {
+        linearGameChangeEnabled = false;
+        randomize();
+    }
+    
+}
+
+function randomize() {
+    previousGame = currentGame;
+    while (true) {
+        currentGame = randomInt(0, games.length );
+        if (currentGame !== previousGame)
+            break;
+    }
+    
 }
 
 function randomInt(min,max) {

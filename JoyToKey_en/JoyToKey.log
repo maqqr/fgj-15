@@ -34,3 +34,46 @@
 2015.01.24 17:38:15.828 Info   ConfigDir=C:\dev\FGJ\FGJ2015\fgj-15\JoyToKey_en\*.cfg (ConfigFileManager.cpp#43)
 2015.01.24 17:38:15.828 Info   Failed to find AppLink.dat (AppLink\AppLinkManager.cpp#32)
 2015.01.24 17:38:15.843 Info   TimerInit: Initializing timer with x1 speed mode (interval = 16 msec)
+2015.01.24 22:10:46.545 Info   Received PBT_APMSUSPEND: Disabling a timer... (Main.cpp#396)
+2015.01.24 23:37:22.803 Info   Received PBT_APMRESUMESUSPEND: Reinitializing joysticks... (Main.cpp#401)
+2015.01.24 23:37:23.138 Info   0 joysticks are detected (Joystick.cpp#109)
+2015.01.24 23:37:23.138 Info   TimerInit: Initializing timer with x1 speed mode (interval = 16 msec)
+2015.01.24 23:38:35.348 Info   Found a joystick: {7F209330-A3EF-11E4-8001-444553540000}, USB Gamepad , USB Gamepad 
+2015.01.24 23:38:35.348 Info   Preferred number = -1
+2015.01.24 23:38:35.348 Info   numAxis = 6
+2015.01.24 23:38:35.348 Info   numPOVs = 0
+2015.01.24 23:38:35.348 Info   numButtons = 10
+2015.01.24 23:38:35.348 Info   EnumDeviceObject: Axis offset=0 type=102 name=Y Axis
+2015.01.24 23:38:35.348 Info   EnumDeviceObject: Axis offset=4 type=2 name=X Axis
+2015.01.24 23:38:35.348 Info   EnumDeviceObject: Axis offset=8 type=602 name=X Axis
+2015.01.24 23:38:35.348 Info   EnumDeviceObject: Axis offset=12 type=702 name=X Axis
+2015.01.24 23:38:35.348 Info   EnumDeviceObject: Axis offset=16 type=802 name=X Axis
+2015.01.24 23:38:35.348 Info   EnumDeviceObject: Axis offset=20 type=902 name=Axis 9
+2015.01.24 23:38:35.348 Info   DetectJoysticks: Detected 1 joystick(s)
+2015.01.24 23:38:35.348 Info   Joystick 1: USB Gamepad
+2015.01.24 23:41:10.954 Info   Found a joystick: {7F209330-A3EF-11E4-8001-444553540000}, USB Gamepad , USB Gamepad 
+2015.01.24 23:41:10.954 Info   Preferred number = -1
+2015.01.24 23:41:10.954 Info   numAxis = 6
+2015.01.24 23:41:10.954 Info   numPOVs = 0
+2015.01.24 23:41:10.954 Info   numButtons = 10
+2015.01.24 23:41:10.954 Info   EnumDeviceObject: Axis offset=0 type=102 name=Y Axis
+2015.01.24 23:41:10.954 Info   EnumDeviceObject: Axis offset=4 type=2 name=X Axis
+2015.01.24 23:41:10.954 Info   EnumDeviceObject: Axis offset=8 type=602 name=X Axis
+2015.01.24 23:41:10.954 Info   EnumDeviceObject: Axis offset=12 type=702 name=X Axis
+2015.01.24 23:41:10.954 Info   EnumDeviceObject: Axis offset=16 type=802 name=X Axis
+2015.01.24 23:41:10.954 Info   EnumDeviceObject: Axis offset=20 type=902 name=Axis 9
+2015.01.24 23:41:10.954 Info   Found a joystick: {7F209330-A3EF-11E4-8002-444553540000}, USB Gamepad , USB Gamepad 
+2015.01.24 23:41:10.954 Info   Preferred number = -1
+2015.01.24 23:41:10.954 Info   numAxis = 6
+2015.01.24 23:41:10.954 Info   numPOVs = 0
+2015.01.24 23:41:10.954 Info   numButtons = 10
+2015.01.24 23:41:10.954 Info   EnumDeviceObject: Axis offset=0 type=102 name=Y Axis
+2015.01.24 23:41:10.954 Info   EnumDeviceObject: Axis offset=4 type=2 name=X Axis
+2015.01.24 23:41:10.954 Info   EnumDeviceObject: Axis offset=8 type=602 name=X Axis
+2015.01.24 23:41:10.954 Info   EnumDeviceObject: Axis offset=12 type=702 name=X Axis
+2015.01.24 23:41:10.954 Info   EnumDeviceObject: Axis offset=16 type=802 name=X Axis
+2015.01.24 23:41:10.954 Info   EnumDeviceObject: Axis offset=20 type=902 name=Axis 9
+2015.01.24 23:41:10.954 Info   DetectJoysticks: Detected 2 joystick(s)
+2015.01.24 23:41:10.969 Info   Joystick 1: USB Gamepad
+2015.01.24 23:41:10.969 Info   Joystick 2: USB Gamepad
+2015.01.25 00:35:11.498 Info   Application terminated (Utils\LogFile.cpp#20)
