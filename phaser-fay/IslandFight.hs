@@ -8,7 +8,7 @@ import PhaserHS
 import Arrows
 import Utils
 
-playerSpeed = 150
+playerSpeed = 180
 
 --assetDir = ""
 assetDir = "./../../Assets/"
