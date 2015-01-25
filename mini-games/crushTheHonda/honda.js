@@ -87,11 +87,11 @@ Honda.prototype.update = function(game){
 	moveWithinField(0, 0, this.sprite);
 	if(game.input.keyboard.isDown(this.down))
 	{
-		move(0,velocity + this.speed, this.sprite);
+		move(0,velocity +100+ this.speed, this.sprite);
 	}
 	else if(game.input.keyboard.isDown(this.up))
 	{
-		move(0,-velocity+ -this.speed, this.sprite);
+		move(0,-velocity+100+ -this.speed, this.sprite);
 	}
         
     if(velocity < 1000)

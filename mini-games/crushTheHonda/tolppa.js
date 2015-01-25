@@ -3,7 +3,7 @@ var lvlWidth = 800;
 var lvlHeight = 600;
 var coolDownForShooting = 0.5;
 var velocityAdding = 1.0;
-var exponentAdding = 0.001;
+var exponentAdding = 0.0001;
 
 function Tolppa(sprite, game, speed, x, y, playerNumber){
 	this.speed = speed;

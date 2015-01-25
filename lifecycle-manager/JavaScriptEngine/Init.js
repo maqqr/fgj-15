@@ -74,7 +74,8 @@ function Init(){
     $("#player1score").text(life);
     $("#player2score").text(life);
      $(".player1win,.player2win,.tie1,.tie2").hide();
-    games = shuffle(games);
+     if(defaultGameNumber === -1)
+        games = shuffle(games);
     $("#main_canvas").show( 500 ,"swing", showGameHubAndStartGame);
     playMainSong();
     $(document).bind('onGameEnd',startNextGame);
