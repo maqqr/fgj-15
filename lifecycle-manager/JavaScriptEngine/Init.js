@@ -14,7 +14,7 @@
 // |___/\_, | |___/\__,_|_|_|_|_|_|  
 //      |__/                         
 
-var defaultGameNumber = 1;
+var defaultGameNumber = -1;
 
 var games = [
     "./../mini-games/FLAPPY/index.html",
