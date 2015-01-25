@@ -6,7 +6,7 @@ var game;
 var cursors;
 var speed = 200;
 //var maxScore = 5;
-var maxTime = 10;
+var maxTime = 5;
 var startTime = 1;
 var startingText = "Don't crush the HONDA !";
 var startingTextComponent;
@@ -34,6 +34,7 @@ function preload()
 	game.load.image('ball', './../../assets/Ball.png');
 	game.load.image('ballBlue', './../../assets/BallBlue.png');
         game.load.image('honda_crush', './../../assets/honda_crush.jpg');
+        game.load.image('honda_safe', './../../assets/honda_safe.jpg');
 }
 
 
@@ -176,6 +177,7 @@ function endGame(){
 	
 	if(jammu.score > jimmu.score){
 		result = 1;
+                game.add.sprite(0, 0, 'honda_safe');
             }
 	else if(jammu.score < jimmu.score){
 		result = 2;
