@@ -73,8 +73,8 @@ $(document).ready(function(){
 function Init(){
     $("#player1score").text(life);
     $("#player2score").text(life);
-     $(".player1win,.player2win").hide();
-    
+     $(".player1win,.player2win,.tie1,.tie2").hide();
+    games = shuffle(games);
     $("#main_canvas").show( 500 ,"swing", showGameHubAndStartGame);
     playMainSong();
     $(document).bind('onGameEnd',startNextGame);
@@ -114,6 +114,11 @@ function startNextGame(e, parameter) {
     $("#gameFrame").focus();
 }
 
+function shuffle(o){ //v1.0
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};
+
 function nextGameUrl() {
     if(linearGameChangeEnabled) {
         linearNextGame();
@@ -150,7 +155,7 @@ function randomInt(min,max) {
 }
 
 function countScores(val){
-    $(".player1win, .player2win").hide();
+    $(".player1win, .player2win, .tie1,.tie2").hide();
     if(val === 1){
         $("#player2score").text(--player2score);
         $(".player1win").show();
@@ -160,6 +165,9 @@ function countScores(val){
         $("#player1score").text(--player1score);
         $(".player2win").show();
     }
+else {
+    $(".tie1,.tie2").show();
+}
 
     checkGameEnd();
 }
