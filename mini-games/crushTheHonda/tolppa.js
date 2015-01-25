@@ -82,7 +82,7 @@ Tolppa.prototype.update = function(game){
 		return;
 	}
 	else if (this.isLoading){
-		this.shootMiddle(game, balls);
+		//this.shootMiddle(game, balls);
 	}
 	else this.isLoading = false;
 	
