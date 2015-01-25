@@ -28,8 +28,8 @@ function init(){
 
 function preload()
 {
-	game.load.image('jammu', './../../assets/Player1.png');
-	game.load.image('jimmu', './../../assets/Player2.png');
+	game.load.image('jammu', './../../assets/honda.png');
+	game.load.image('jimmu', './../../assets/tolppa.png');
 	game.load.image('spikes', './../../assets/Spikes.png');
 	game.load.image('ball', './../../assets/Ball.png');
 	game.load.image('ballBlue', './../../assets/BallBlue.png');

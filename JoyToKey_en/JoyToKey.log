@@ -34,3 +34,5 @@
 2015.01.25 14:10:38.191 Info   ConfigDir=C:\dev\FGJ\FGJ2015\fgj-15\JoyToKey_en\*.cfg (ConfigFileManager.cpp#43)
 2015.01.25 14:10:38.191 Info   Failed to find AppLink.dat (AppLink\AppLinkManager.cpp#32)
 2015.01.25 14:10:38.191 Info   TimerInit: Initializing timer with x1 speed mode (interval = 16 msec)
+2015.01.25 15:02:19.168 Error  Access is denied.
+ (Utils\Utils.cpp#446)

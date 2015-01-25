@@ -2,6 +2,8 @@
 var lvlWidth = 800;
 var lvlHeight = 600;
 var coolDownForShooting = 0.5;
+var velocityAdding = 1.0;
+var exponentAdding = 0.001;
 
 function Tolppa(sprite, game, speed, x, y, playerNumber){
 	this.speed = speed;
@@ -12,7 +14,7 @@ function Tolppa(sprite, game, speed, x, y, playerNumber){
 	this.isLoading = false;
 	this.lastShot = 0;
 	this.loaded = 0;
-	this.sprite = game.add.sprite(x, y, sprite)
+	this.sprite = game.add.sprite(x, y, sprite);
 	game.physics.arcade.enable(this.sprite);
 	//this.sprite.body.collideWorldBounds =true; 
 }
@@ -35,7 +37,7 @@ function PlayerWithKeys(left, right, up, down, primary, special, sprite, game, s
 	player.primary = primary;
 	player.special = special;
 	this.speed = speed;
-	this.sprite = game.add.sprite(100, 100, sprite)
+	this.sprite = game.add.sprite(100, 100, sprite);
 	game.physics.arcade.enable(this.sprite);
 	return player;
 }
@@ -80,24 +82,25 @@ Tolppa.prototype.update = function(game){
 		return;
 	}
 	else if (this.isLoading){
-		this.shootMiddle(game, balls);
+		//this.shootMiddle(game, balls);
 	}
 	else this.isLoading = false;
 	
 	if(game.input.keyboard.isDown(this.down))
 	{
-		moveWithinField(0, this.value+this.speed, this.sprite);
+		moveWithinField(0,velocityAdding+ this.speed, this.sprite);
 	}
 	else if(game.input.keyboard.isDown(this.up))
 	{
-		moveWithinField(0,-this.value+-this.speed, this.sprite);
+		moveWithinField(0,-velocityAdding+-this.speed, this.sprite);
 	}
 	else
 	{
 		this.sprite.body.velocity.x = 0;
 		this.sprite.body.velocity.y = 0;
 	}
-        this.value = this.value * exponent;
+        velocityAdding += velocityAdding * exponentAdding;
+        
 }
 
 Tolppa.prototype.shootMiddle = function(game, balls){
