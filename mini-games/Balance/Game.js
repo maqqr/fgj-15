@@ -38,8 +38,8 @@ function create(){
 	
 	jammu = createPlayer('jammu', 1, speed, false, player1StartX, player1StartY);
 	jimmu = createPlayer('jimmu', 2, speed, false, player2StartX, player2StartY);
-	game.add.sprite(player1StartX - jimmu.sprite.body.halfWidth, player1StartY , 'ball');
-	game.add.sprite(player2StartX - jimmu.sprite.body.halfWidth, player2StartY, 'blueBall');
+	game.add.sprite(player1StartX - jimmu.sprite.body.halfWidth * 0.5, player1StartY , 'ball');
+	game.add.sprite(player2StartX - jimmu.sprite.body.halfWidth * 0.5, player2StartY, 'blueBall');
 	
 	game.time.events.add(Phaser.Timer.SECOND * startTime, start, this);
 	
