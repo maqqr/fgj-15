@@ -25,8 +25,8 @@ function preload()
 function create(){
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	game.stage.backgroundColor = '#339933';
-	jammu = createPlayer('jammu', 1, false, 200, 100);
-	jimmu = createPlayer('jimmu', 2, false, 600, 100);	
+	jammu = createPlayer('jammu', 1, false, 600, 100);
+	jimmu = createPlayer('jimmu', 2, false, 200, 100);	
 	jimmu.sprite.body.bounce.setTo(1,1);
 	jammu.sprite.body.bounce.setTo(1,1);
 	//game.physics.arcade.enable(jimmu);
