@@ -49,15 +49,15 @@ body {
     font-size: 30px;
 }
 
-.player1win, .player2win {
-    float:right;
+.player1win, .player2win, .tie1, .tie2 {
+    right: 10px;
     font-size: 40px;
-    position: relative;
-    top:300px;
+    position: absolute;
+    top:600px;
 }
 
-.player2win {
-    float:left;
+.player2win,.tie2 {
+    left:10px;
 }
 
 .timeLeft {
