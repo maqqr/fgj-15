@@ -25,7 +25,6 @@ function init(){
 
 function preload()
 {
-
 	game.load.image('jammu', './../../assets/Player1.png');
 	game.load.image('jimmu', './../../assets/Player2.png');
 	game.load.image('ball', './../../assets/Ball.png');
