@@ -10,8 +10,8 @@ import Utils
 
 playerSpeed = 180
 
-assetDir = ""
---assetDir = "./../../Assets/"
+--assetDir = ""
+assetDir = "./../../Assets/"
 
 data Player = Player
     { sprite     :: Sprite
@@ -42,7 +42,7 @@ preloadGame game = do
     loadSpriteSheet game "reddude" (assetDir ++ "redplayer.png") (20, 32)
     loadSpriteSheet game "bluesword" (assetDir ++ "bluesword.png") (40, 32)
     loadSpriteSheet game "redsword" (assetDir ++ "redsword.png") (40, 32)
-    loadSpriteSheet game "ball" (assetDir ++ "ball.png") (16, 32)
+    loadSpriteSheet game "ball" (assetDir ++ "ballz.png") (16, 32)
     loadBitmapFont game "testfont" (assetDir ++ "font.png") (assetDir ++ "font.fnt")
 
 
@@ -67,7 +67,7 @@ createPlayer :: Game
 createPlayer game physics startPos textPos texPre = do
     sprite <- newSprite game (texPre ++ "dude") (50, 50)
     enable physics sprite
-    sprite ~> (body >>> gravity >>> setY 300)
+    sprite ~> (body >>> gravity >>> setY 600)
     sprite ~> (anchor >>> setTo (0.5, 0.5))
     sprite ~> (position >>> setTo startPos)
     sprite ~> (scale >>> setTo (3, 3))
@@ -91,12 +91,20 @@ createGame game = do
     let makep = platf platforms
     makep (400, 600) (800, 32)
 
+    -- Middle plaftorms.
     makep (400, 116) (64, 16)
+    makep (400, 300) (64, 16)
+    makep (400, 480) (64, 16)
+
+    -- Side platforms
+    forM_ [230, 400] $ \i -> do
+        makep (100, i) (200, 16)
+        makep (700, i) (200, 16)
 
     -- Create players.
     let cp = createPlayer game physics
-    player1' <- cp (740, 50) (710, 50) "blue"
-    player2' <- cp (60, 50) (30, 50) "red"
+    player1' <- cp (740, 500) (710, 50) "blue"
+    player2' <- cp (60, 500) (30, 50) "red"
 
     -- Set default animations.
     forM_ [player1', player2'] $ \p -> changeTexture p "dude" "walk"
@@ -160,8 +168,8 @@ updateGame game state = do
     swordFight player1 player2 updatePlayer2
     swordFight player2 player1 updatePlayer1
 
-    checkEnd player1 2
-    checkEnd player2 1
+    checkEnd ball player1 1
+    checkEnd ball player2 2
 
     -- Update both players.
     forM_ (enumerate [(player1, updatePlayer1), (player2, updatePlayer2)]) $ \(i, (player, updater)) -> do
@@ -186,16 +194,20 @@ updateGame game state = do
         -- Jumping.
         let onGround = player ~> (sprite >>> body >>> touchingDown)
         when (padUp input && onGround) $
-            player ~> (sprite >>> body >>> velocity >>> setY (-350))
+            player ~> (sprite >>> body >>> velocity >>> setY (-400))
 
     where
         enumerate :: [a] -> [(Int, a)]
         enumerate = zip [1..]
 
         -- Ends game when player is outside of screen.
-        checkEnd :: Player -> Int -> Fay ()
-        checkEnd Player{..} index = do
-            when (getY (position sprite) >= 600) $ do
+        checkEnd :: Sprite -> Player -> Int -> Fay ()
+        checkEnd ball Player{..} index = do
+            let (ax, ay)    = sprite ~> (position >>> vectorToTuple)
+                (dx, dy)    = ball ~> (position >>> vectorToTuple)
+                distSq      = (dx - ax) ** 2 + (dy - ay) ** 2
+                closeEnough = distSq < 30 ** 2
+            when closeEnough $ do
                 destroy game
                 endGame index
 
