@@ -17,6 +17,7 @@
 var defaultGameNumber = -1; // -1 niin randomi päällä
 
 var games = [
+    "./../mini-games/purpleBall/index.html",
     "./../mini-games/Balance/index.html",
     "./../mini-games/crushTheHonda/index.html",
     "./../mini-games/mathMadness/index.html",

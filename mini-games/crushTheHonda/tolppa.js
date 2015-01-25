@@ -5,6 +5,7 @@ var coolDownForShooting = 0.5;
 
 function Tolppa(sprite, game, speed, x, y, playerNumber){
 	this.speed = speed;
+        this.value = 100;
 	this.score = 0;
 	this.playerNumber = playerNumber;
 	this.isActive = false;
@@ -13,7 +14,7 @@ function Tolppa(sprite, game, speed, x, y, playerNumber){
 	this.loaded = 0;
 	this.sprite = game.add.sprite(x, y, sprite)
 	game.physics.arcade.enable(this.sprite);
-	this.sprite.body.collideWorldBounds =true; 
+	//this.sprite.body.collideWorldBounds =true; 
 }
 
 
@@ -85,18 +86,18 @@ Tolppa.prototype.update = function(game){
 	
 	if(game.input.keyboard.isDown(this.down))
 	{
-		move(0, this.speed, this.sprite);
+		moveWithinField(0, this.value+this.speed, this.sprite);
 	}
 	else if(game.input.keyboard.isDown(this.up))
 	{
-		move(0, -this.speed, this.sprite);
+		moveWithinField(0,-this.value+-this.speed, this.sprite);
 	}
 	else
 	{
 		this.sprite.body.velocity.x = 0;
 		this.sprite.body.velocity.y = 0;
 	}
-
+        this.value = this.value * exponent;
 }
 
 Tolppa.prototype.shootMiddle = function(game, balls){
