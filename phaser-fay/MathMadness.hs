@@ -9,7 +9,7 @@ import Arrows
 import Utils
 
 --assetDir = ""
-assetDir = "./../../Assets/"
+assetDir = "./../../assets/"
 
 data Player = Player
     { rightChoice :: Int

@@ -11,7 +11,7 @@ import Utils
 playerSpeed = 180
 
 --assetDir = ""
-assetDir = "./../../Assets/"
+assetDir = "./../../assets/"
 
 data Player = Player
     { sprite     :: Sprite
