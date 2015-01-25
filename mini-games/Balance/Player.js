@@ -11,7 +11,7 @@ function Player(sprite, game, speed, x, y, playerNumber){
 	this.sprite = game.add.sprite(x, y, sprite)
 	game.physics.arcade.enable(this.sprite);
 	this.fallingAngle = this.sprite.angle;
-	this.sprite.anchor.setTo(0.5, 0.5);
+	this.sprite.anchor.setTo(0.5, 1);
 
 }
 
@@ -53,6 +53,7 @@ Player.prototype.setActivity = function(activity){
 	this.isActive = activity;
 	this.sprite.body.velocity.x = 0;
 	this.sprite.body.velocity.y = 0;
+	this.sprite.body.angularVelocity = 0;
 }
 
 Player.prototype.registerPlayerAs = function(playerNumber){

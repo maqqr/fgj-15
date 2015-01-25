@@ -11,7 +11,7 @@ var startingText = "Keep your balance!";
 var startingTextComponent;
 var player1Text;
 var player2Text;
-var angleMultiplier = 1.01;
+var angleMultiplier = 1.2;
 var player2StartX = 250;
 var player2StartY = 300;
 var player1StartX = 550;
@@ -39,8 +39,8 @@ function create(){
 	
 	jammu = createPlayer('jammu', 1, speed, false, player1StartX, player1StartY);
 	jimmu = createPlayer('jimmu', 2, speed, false, player2StartX, player2StartY);
-	game.add.sprite(player1StartX - jimmu.sprite.body.halfWidth, player1StartY + jammu.sprite.body.halfHeight, 'ball');
-	game.add.sprite(player2StartX - jimmu.sprite.body.halfWidth, player2StartY + jimmu.sprite.body.halfHeight, 'blueBall');
+	game.add.sprite(player1StartX - jimmu.sprite.body.halfWidth, player1StartY , 'ball');
+	game.add.sprite(player2StartX - jimmu.sprite.body.halfWidth, player2StartY, 'blueBall');
 	
 	game.time.events.add(Phaser.Timer.SECOND * startTime, start, this);
 	
@@ -80,10 +80,10 @@ function update(){
 	//	angleMultiplier *= -1;
 	//}
 	//else{
-		angleMultiplier *= 1.0001;
+		angleMultiplier *= 1.001;
 	//}
-	jimmu.update(game, 5,angleMultiplier);
-	jammu.update(game, 5,angleMultiplier);
+	jimmu.update(game, 4,angleMultiplier);
+	jammu.update(game, 4,angleMultiplier);
 	
 	if(Math.abs(jimmu.sprite.angle) > 90)
 	{
