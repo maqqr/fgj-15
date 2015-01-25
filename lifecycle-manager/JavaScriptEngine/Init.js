@@ -14,7 +14,7 @@
 // |___/\_, | |___/\__,_|_|_|_|_|_|  
 //      |__/                         
 
-var defaultGameNumber = 2; // -1 niin randomi päällä
+var defaultGameNumber = -1; // -1 niin randomi päällä
 
 var games = [
     "./../mini-games/purpleBall/index.html",
